@@ -13,4 +13,14 @@ def home(request):
     #     print "Error: ", e
     #     raise Exception( "ERROR : Internal Server Error .Please contact administrator.")
 
+from models import *
+from rest_framework import viewsets
+from serializers import *
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = UserBases.objects.all().order_by('-date_joined')
+    serializer_class = UserBaseSerializer

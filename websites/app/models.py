@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.base_user import BaseUserManager
 # Create your models here.
 
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -35,6 +36,7 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+
 class GroupUsers(models.Model):
     name = models.CharField(_('name'), max_length=250, blank=True)
 
@@ -42,8 +44,10 @@ class GroupUsers(models.Model):
         verbose_name = _('GroupUser')
         verbose_name_plural = _('GroupUser')
 
+
 class UserBases(AbstractBaseUser, PermissionsMixin):
-    groupUser = models.ForeignKey('GroupUsers', on_delete=models.CASCADE, null=True, blank=True)
+    groupUser = models.ForeignKey(
+        'GroupUsers', on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=250, blank=True)
     last_name = models.CharField(_('last name'), max_length=250, blank=True)
@@ -79,6 +83,9 @@ class UserBases(AbstractBaseUser, PermissionsMixin):
         '''
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
+    def __unicode__(self):
+        return self.email
+
 class GroupUserPermissions(models.Model):
     groupUser = models.ForeignKey('GroupUsers', on_delete=models.CASCADE)
     name = models.CharField(_('name'), max_length=255)
@@ -97,7 +104,7 @@ class GroupUserPermissions(models.Model):
         ordering = ('content_type__app_label', 'content_type__model',
                     'codename')
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s | %s | %s" % (
             self.content_type.app_label,
             self.content_type,
@@ -111,6 +118,9 @@ class GroupUserPermissions(models.Model):
 
 class Owners(models.Model):
     user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return unicode(self.user)
 
 
 class DateTimeModel(models.Model):
@@ -128,88 +138,117 @@ class DateTimeModel(models.Model):
     class Meta:
         abstract = True
 
+
 class Categories(DateTimeModel):
-	name = models.CharField(_('name'), max_length=250, blank=True)
-	detail = models.CharField(_('detail'), max_length=250, null=True, blank=True)
-	is_active = models.BooleanField(_('active'), default=True)
+    name = models.CharField(_('name'), max_length=250, blank=True)
+    detail = models.CharField(
+        _('detail'), max_length=250, null=True, blank=True)
+    is_active = models.BooleanField(_('active'), default=True)
+
+    def __unicode__(self):
+        return self.name
 
 
 class Stores(DateTimeModel):
     owners = models.ManyToManyField(Owners)
     user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
-    name = models.CharField(_('name'), max_length=250, blank=True)
-    phone = models.CharField(_('phone'), max_length=250, blank=True)
-    image = models.ImageField(max_length=1000, null=True, blank=True, upload_to="image")
+    name = models.CharField(_('name'), max_length=250, blank=False)
+    phone = models.CharField(_('phone'), max_length=250, blank=False)
+    image = models.ImageField(
+        max_length=1000, null=True, blank=True, upload_to="image")
     is_active = models.BooleanField(_('active'), default=True)
-    soft_delete = models.DateTimeField(_('soft delete'), editable=False)
+    soft_delete = models.DateTimeField(
+        _('soft delete'), editable=False, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.name
+
 
 class Pictures(DateTimeModel):
-	image = models.ImageField(max_length=1000, null=True, blank=True, upload_to="Picture")
-	product = models.ForeignKey('Products', on_delete=models.CASCADE)
+    image = models.ImageField(max_length=1000, null=True,
+                              blank=True, upload_to="Picture")
+    product = models.ForeignKey('Products', on_delete=models.CASCADE)
 
-
+    def __unicode__(self):
+        return self.product
+        
 class Products(DateTimeModel):
-	product_status  = (
-		('coming_soon', 'coming soon'),
-		('still', 'still'),
-		('oversell', 'oversell'),
-	)
-	products = models.ManyToManyField(Categories)
-	stores = models.ManyToManyField(Stores)
-	supplier = models.ForeignKey('Suppliers')
-	name = models.CharField(_('name'), max_length=250, blank=True)
-	detail = models.CharField(_('detail'), max_length=250, blank=True)
-	price = models.IntegerField(_('price'))
-	tax = models.IntegerField(_('tax'))
-	hit_count = models.IntegerField(_('hit_count'))
-	expire_date = models.DateTimeField()
-	is_active = models.BooleanField(_('active'), default=True)
-	status = models.CharField(max_length=255, choices=product_status, default="still")
+    product_status  = (
+        ('coming_soon', 'Coming soon'),
+        ('still', 'Still'),
+        ('oversell', 'Oversell'),
+    )
+    products = models.ManyToManyField(Categories)
+    stores = models.ManyToManyField(Stores)
+    supplier = models.ForeignKey('Suppliers', null=True, blank=True)
+    name = models.CharField(_('name'), max_length=250, blank=True)
+    detail = models.CharField(_('detail'), max_length=250, blank=True)
+    price = models.IntegerField(_('price'))
+    tax = models.IntegerField(_('tax'),null=True, blank=True)
+    hit_count = models.IntegerField(_('hit_count'), null=True, blank=True)
+    expire_date = models.DateField()
+    is_active = models.BooleanField(_('active'), default=True)
+    status = models.CharField(max_length=255, choices=product_status, default="still")
+
+    def __unicode__(self):
+        return self.name
 
 class Carts(DateTimeModel):
-	products = models.ManyToManyField(Products)
-	product_code = models.CharField(_("Product code"),max_length=255,null=True, blank=True)
+    products = models.ManyToManyField(Products)
+    product_code = models.CharField(_("Product code"),max_length=255,null=True, blank=True)
 
+    def __unicode__(self):
+        return self.product
 
 class Customers(models.Model):
     user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
     cart = models.OneToOneField(Carts, on_delete=models.CASCADE)
 
+    def __unicode__(self):
+        return self.user
 
 class OrderInfomations(DateTimeModel):
-	order_type = (
-		('cancel', 'Cancel'),
-		('payment_error', 'Payment Error'),
-		('create', 'Create'),
-		('shipping', 'Shipping'),
-		('done', 'Done')
-	)
+    order_type = (
+        ('cancel', 'Cancel'),
+        ('payment_error', 'Payment Error'),
+        ('create', 'Create'),
+        ('shipping', 'Shipping'),
+        ('done', 'Done')
+    )
 
-	payment_type = (
-		('payment_error', 'Payment Error'),
-		('pendding', 'Pendding'),
-		('done', 'Done')
-	)
-	customer = models.ForeignKey('Customers', on_delete=models.CASCADE)
-	store = models.ForeignKey('Stores', on_delete=models.CASCADE)
-	order_code = models.CharField(_('order_code'), max_length=250, blank=True)
-	money = models.CharField(_('money'), max_length=250, null=True, blank=True)
-	status_payment = models.CharField(_('status_payment'), max_length=250, choices=payment_type, default="Pendding")
-	payment_method = models.CharField(_('payment_method'), max_length=250, null=True, blank=True)
-	status_order = models.CharField(max_length=255, choices=order_type, default="Create")
+    payment_type = (
+        ('payment_error', 'Payment Error'),
+        ('pendding', 'Pendding'),
+        ('done', 'Done')
+    )
+    customer = models.ForeignKey('Customers', on_delete=models.CASCADE)
+    store = models.ForeignKey('Stores', on_delete=models.CASCADE)
+    order_code = models.CharField(_('order_code'), max_length=250, blank=True)
+    money = models.CharField(_('money'), max_length=250, null=True, blank=True)
+    status_payment = models.CharField(_('status_payment'), max_length=250, choices=payment_type, default="Pendding")
+    payment_method = models.CharField(_('payment_method'), max_length=250, null=True, blank=True)
+    status_order = models.CharField(max_length=255, choices=order_type, default="Create")
+
+    def __unicode__(self):
+        return self.customer
 
 class Feedbacks(DateTimeModel):
-	customer = models.ForeignKey('Customers', on_delete=models.CASCADE)
-	store = models.ForeignKey('Stores', on_delete=models.CASCADE)
-	product = models.ForeignKey('Products', on_delete=models.CASCADE)
-	detail =  models.CharField(max_length=255, null=True, blank=True)
+    customer = models.ForeignKey('Customers', on_delete=models.CASCADE)
+    store = models.ForeignKey('Stores', on_delete=models.CASCADE)
+    product = models.ForeignKey('Products', on_delete=models.CASCADE)
+    detail =  models.CharField(max_length=255, null=True, blank=True)
 
+    def __unicode__(self):
+        return self.customer
 
 class Suppliers(DateTimeModel):
-	name = models.CharField(_('name'), max_length=250, blank=True)
-	phone = models.CharField(_('phone'), max_length=250, blank=True)
-	is_active = models.BooleanField(_('active'), default=True)
-	soft_delete = models.DateTimeField(_('soft delete'), editable=False)
+    name = models.CharField(_('name'), max_length=250, blank=True)
+    phone = models.CharField(_('phone'), max_length=250, blank=True)
+    is_active = models.BooleanField(_('active'), default=True)
+    soft_delete = models.DateTimeField(_('soft delete'), editable=False)
+
+    def __unicode__(self):
+        return self.name
 
 class ShipInfomations(DateTimeModel):
     orderInfomation = models.OneToOneField('OrderInfomations', on_delete=models.CASCADE)
@@ -219,6 +258,9 @@ class ShipInfomations(DateTimeModel):
     first_name = models.CharField(_('first name'), max_length=250, blank=True)
     last_name = models.CharField(_('last name'), max_length=250, blank=True)
 
+    def __unicode__(self):
+        return self.email
+
 class OrderDetails(DateTimeModel):
     orderInfomation = models.ForeignKey('OrderInfomations', on_delete=models.CASCADE)
     product = models.ForeignKey('Products', on_delete=models.CASCADE)
@@ -226,5 +268,7 @@ class OrderDetails(DateTimeModel):
     tax = models.IntegerField(_('tax'))
     quanlity = models.IntegerField(_('quanlity'))
 
+    def __unicode__(self):
+        return self.product
 
 

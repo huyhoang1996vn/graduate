@@ -6,6 +6,11 @@ from models import *
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
 
+
+class PictureInline(admin.TabularInline):
+    model = Pictures
+    extra = 3
+
 class ProductForm(forms.ModelForm):
     expire_date = forms.DateField(widget=AdminDateWidget())
 
@@ -23,6 +28,7 @@ admin.site.register(Stores, StoreAdmin)
 
 class ProductAdmin(admin.ModelAdmin):
     form = ProductForm
+    inlines = [ PictureInline, ]
 admin.site.register(Products, ProductAdmin)
 
 class OwnerAdmin(admin.ModelAdmin):

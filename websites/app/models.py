@@ -146,7 +146,7 @@ class Categories(DateTimeModel):
     is_active = models.BooleanField(_('active'), default=True)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.name)
 
 
 class Stores(DateTimeModel):
@@ -161,16 +161,16 @@ class Stores(DateTimeModel):
         _('soft delete'), editable=False, null=True, blank=True)
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.name)
 
 
 class Pictures(DateTimeModel):
     image = models.ImageField(max_length=1000, null=True,
                               blank=True, upload_to="Picture")
-    product = models.ForeignKey('Products', on_delete=models.CASCADE)
+    product = models.ForeignKey('Products', related_name = 'picture' , on_delete=models.CASCADE)
 
     def __unicode__(self):
-        return self.product
+        return unicode(self.product)
         
 class Products(DateTimeModel):
     product_status  = (

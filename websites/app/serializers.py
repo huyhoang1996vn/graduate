@@ -22,9 +22,16 @@ class StoreSerializer(serializers.ModelSerializer):
         model = Stores
         fields = '__all__'
 
+class PictureSerializer(serializers.ModelSerializer):
+	
+    class Meta:
+        model = Pictures
+        fields = '__all__'
+
 
 class ProductSerializer(serializers.ModelSerializer):
-	
+    picture = PictureSerializer(many = True)
+
     class Meta:
         model = Products
         fields = '__all__'

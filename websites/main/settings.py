@@ -133,6 +133,11 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(BASE_DIR, "static"),
 )
+
+# path to outside file
+OUTSIDE_URL = '/'
+OUTSIDE_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../'))
+
 AUTH_USER_MODEL = 'app.UserBases'
 
 from config.setting_local import *

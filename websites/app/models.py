@@ -38,12 +38,19 @@ class UserManager(BaseUserManager):
 
 
 class GroupUsers(models.Model):
-    name = models.CharField(_('name'), max_length=250, blank=True)
+    group_type  = (
+        ('customer_group', 'customer group'),
+        ('store_group', 'store group'),
+        ('owner_group', 'owner group'),
+    )
+    name = models.CharField(_('name'),choices=group_type, default="customer_group", max_length=250, unique = True)
 
     class Meta:
         verbose_name = _('GroupUser')
         verbose_name_plural = _('GroupUser')
 
+    def __unicode__(self):
+        return unicode(self.name)
 
 class UserBases(AbstractBaseUser, PermissionsMixin):
     groupUser = models.ForeignKey(
@@ -87,15 +94,10 @@ class UserBases(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class GroupUserPermissions(models.Model):
-    groupUser = models.ForeignKey('GroupUsers', on_delete=models.CASCADE)
+    groupUser = models.ForeignKey('GroupUsers', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(_('name'), max_length=255)
-    content_type = models.ForeignKey(
-        ContentType,
-        models.CASCADE,
-        verbose_name=_('content type'),
-    )
+    content_type = models.CharField(_('name'), max_length=255)
     codename = models.CharField(_('codename'), max_length=100)
-    objects = PermissionManager()
 
     class Meta:
         verbose_name = _('GroupUserPermission')
@@ -178,7 +180,7 @@ class Products(DateTimeModel):
         ('still', 'Still'),
         ('oversell', 'Oversell'),
     )
-    products = models.ManyToManyField(Categories)
+    category = models.ManyToManyField(Categories)
     stores = models.ManyToManyField(Stores)
     supplier = models.ForeignKey('Suppliers', null=True, blank=True)
     name = models.CharField(_('name'), max_length=250, blank=True)
@@ -202,10 +204,10 @@ class Carts(DateTimeModel):
 
 class Customers(models.Model):
     user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
-    cart = models.OneToOneField(Carts, on_delete=models.CASCADE)
+    cart = models.OneToOneField(Carts, on_delete=models.CASCADE, null=True, blank=True)
 
     def __unicode__(self):
-        return self.user
+        return unicode(self.user)
 
 class OrderInfomations(DateTimeModel):
     order_type = (

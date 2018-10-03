@@ -39,6 +39,12 @@ class UserBaseAdmin(admin.ModelAdmin):
     pass
 admin.site.register(UserBases, UserBaseAdmin)
 
+class CustomerAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Customers, CustomerAdmin)
+
+
+
 # class AuthorAdmin(admin.ModelAdmin):
 #     pass
 # admin.site.register(Categories, AuthorAdmin)

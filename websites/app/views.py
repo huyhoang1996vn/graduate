@@ -41,3 +41,23 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = Categories.objects.all()
     serializer_class = CategorySerializer
+
+
+
+class OwnerViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Owners.objects.all()
+    serializer_class = OwnerSerializer
+
+
+class CustomerViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Customers.objects.all()
+    serializer_class = CustomerSerializer
+
+
+

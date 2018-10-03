@@ -30,10 +30,49 @@ class PictureSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    picture = PictureSerializer(many = True)
+    picture = PictureSerializer(many = True, required = False)
 
     class Meta:
         model = Products
         fields = '__all__'
+
+
+class OwnerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Owners
+        fields = '__all__'
+
+class StoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Stores
+        fields = '__all__'
+
+
+class CartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Carts
+        fields = '__all__'
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    user = UserBaseSerializer()
+    # cart = serializers.PrimaryKeyRelatedField()
+
+    class Meta:
+        model = Customers
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        userBases = UserBases.objects.create(**user_data)
+        customers = Customers.objects.create(user = userBases, **validated_data)
+        return customers
+
+
+
+
 
 

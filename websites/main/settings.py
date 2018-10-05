@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'rest_framework',
+    'django_filters',
     'app',
 ]
 
@@ -133,7 +134,9 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(BASE_DIR, "static"),
 )
-
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}
 # path to outside file
 OUTSIDE_URL = '/'
 OUTSIDE_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../'))

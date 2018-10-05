@@ -152,7 +152,7 @@ class Categories(DateTimeModel):
 
 
 class Stores(DateTimeModel):
-    owners = models.ManyToManyField(Owners)
+    owners = models.ManyToManyField(Owners, null=True, blank=True)
     user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
     name = models.CharField(_('name'), max_length=250, blank=False)
     phone = models.CharField(_('phone'), max_length=250, blank=False)
@@ -183,7 +183,7 @@ class Products(DateTimeModel):
     category = models.ManyToManyField(Categories)
     stores = models.ManyToManyField(Stores)
     supplier = models.ForeignKey('Suppliers', null=True, blank=True)
-    name = models.CharField(_('name'), max_length=250, blank=True)
+    name = models.CharField(_('name'), max_length=250, blank=False, null=False)
     detail = models.CharField(_('detail'), max_length=250, blank=True)
     price = models.IntegerField(_('price'))
     tax = models.IntegerField(_('tax'),null=True, blank=True)

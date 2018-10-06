@@ -2,10 +2,28 @@ from rest_framework import serializers
 from models import *
 
 class UserBaseSerializer(serializers.ModelSerializer):
+    roll = serializers.CharField( required = True, write_only = True)
 
     class Meta:
         model = UserBases
         fields = '__all__'
+
+    # create userbase with customer or store or owner
+    def create(self, validated_data):
+        roll = validated_data.get('roll', None)
+        if roll:
+            del validated_data['roll']
+            
+        userBase = UserBases.objects.create(**validated_data)
+
+        if roll == 'customer':
+            customers = Customers.objects.create(user = userBase)
+        elif roll == 'store':
+            store = Stores.objects.create(user = userBase)
+        elif roll == 'owner':
+            owner = Owners.objects.create(user = userBase)
+
+        return userBase
 
 
 class CategorySerializer(serializers.ModelSerializer):

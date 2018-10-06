@@ -15,6 +15,7 @@ router.register(r'customer', views.CustomerViewSet)
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^', include(router.urls)),
+    url(r'^register/$', views.UserViewSet.as_view({'post': 'create'})),
 
 ]
     

@@ -196,18 +196,32 @@ class Products(DateTimeModel):
         return self.name
 
 class Carts(DateTimeModel):
-    products = models.ManyToManyField(Products)
+    products = models.ManyToManyField(Products, null=True, blank=True)
     product_code = models.CharField(_("Product code"),max_length=255,null=True, blank=True)
 
-    def __unicode__(self):
-        return self.product
+    # def __unicode__(self):
+    #     return self.products
+
+    def __str__(self):
+        return "%s" %(self.products)
 
 class Customers(models.Model):
     user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
-    cart = models.OneToOneField(Carts, on_delete=models.CASCADE, null=True, blank=True)
+    cart = models.OneToOneField(Carts, related_name="cus_cart_rel", on_delete=models.CASCADE)
 
-    def __unicode__(self):
-        return unicode(self.user)
+    # def __unicode__(self):
+    #     return unicode(self.user)
+
+    def __str__(self):
+        return "%s" %(self.user)
+
+    # add cart for customer
+    def save(self, *args, **kwargs):
+        if not hasattr(self, 'cart'):
+            cart = Carts.objects.create(cus_cart_rel= (self))
+            self.cart = cart
+        super(Customers, self).save(*args, **kwargs)
+
 
 class OrderInfomations(DateTimeModel):
     order_type = (

@@ -39,8 +39,16 @@ class UserBaseAdmin(admin.ModelAdmin):
     pass
 admin.site.register(UserBases, UserBaseAdmin)
 
+
+class CustomerForm(forms.ModelForm):
+    # cart = forms.forms.ModelChoiceField(queryset=Carts.objects.all(), required)
+
+    class Meta:
+        model = Customers
+        fields = ("user", )
+
 class CustomerAdmin(admin.ModelAdmin):
-    pass
+    form = CustomerForm
 admin.site.register(Customers, CustomerAdmin)
 
 

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from models import *
 from rest_framework import viewsets
 from serializers import *
-from rest_framework.filters import SearchFilter, OrderingFilter
+# from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
@@ -38,7 +38,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = (SearchFilter, OrderingFilter)
+    # filter_backends = (SearchFilter, OrderingFilter)
     filter_fields = ('category', 'stores')
     search_fields = ('name', )
     ordering_fields =  '__all__'

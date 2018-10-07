@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+from django.urls import reverse_lazy
 import os
 import sys
 reload(sys)
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
     'app',
 ]
 
@@ -135,12 +136,23 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    )
 }
 # path to outside file
 OUTSIDE_URL = '/'
 OUTSIDE_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../'))
 
 AUTH_USER_MODEL = 'app.UserBases'
+
+LOGIN_URL=reverse_lazy('login')
+# LOGIN_REDIRECT_URL='/api/login'
 
 from config.setting_local import *

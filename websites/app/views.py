@@ -6,6 +6,10 @@ from models import *
 from rest_framework import viewsets
 from serializers import *
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def home(request):
@@ -66,4 +70,16 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
 
 
+@api_view(['GET',])
+@login_required
+def profile_user(request):
+    try:
+        user = request.user
+        userSerializer = UserBaseSerializer(user)
+        return Response(userSerializer.data)
+
+    except Exception, e:
+        print 'profile_user ', e
+        error = {"code": 500, "message": _("Internal server error."), "fields": "", "flag": False}
+        return Response(error, status=500)
 

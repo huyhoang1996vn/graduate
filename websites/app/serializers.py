@@ -14,8 +14,10 @@ class UserBaseSerializer(serializers.ModelSerializer):
         if roll:
             del validated_data['roll']
             
-        userBase = UserBases.objects.create(**validated_data)
-
+        userBase = UserBases(**validated_data)
+        userBase.set_password(validated_data['password'])
+        userBase.save()
+        
         if roll == 'customer':
             customers = Customers.objects.create(user = userBase)
         elif roll == 'store':

@@ -3,6 +3,7 @@ import views
 from rest_framework import routers
 from django.conf.urls.static import static
 from django.conf import settings
+from rest_framework.authtoken import views as auth_view
 
 router = routers.DefaultRouter()
 router.register(r'userbase', views.UserViewSet)
@@ -16,6 +17,8 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^', include(router.urls)),
     url(r'^register/$', views.UserViewSet.as_view({'post': 'create'})),
+    url(r'^profile/$', views.profile_user),
+    url(r'^login/', auth_view.obtain_auth_token, name='login'),
 
 ]
     

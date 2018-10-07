@@ -41,12 +41,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework.authtoken',
+    'corsheaders',
     'app',
 ]
 
 SITE_ID = 1
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -150,6 +152,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     )
 }
+CORS_ORIGIN_ALLOW_ALL = True
 # path to outside file
 OUTSIDE_URL = '/'
 OUTSIDE_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../'))

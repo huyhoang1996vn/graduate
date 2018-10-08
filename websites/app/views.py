@@ -77,16 +77,24 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
 
 
-@api_view(['GET',])
+@api_view(['GET','PUT'])
 @login_required
 def profile_user(request):
     try:
-        user = request.user
-        userSerializer = UserBaseSerializer(user)
-        return Response(userSerializer.data)
-
+        if request.method == 'GET':
+            user = request.user
+            userSerializer = ProfileSerializer(user)
+            return Response(userSerializer.data)
+        else:
+            user = request.user
+            userBaseSerializer = ProfileSerializer(instance = user, data = request.data) 
+            if userBaseSerializer.is_valid():
+                userBaseSerializer.save()
+                return Response(userBaseSerializer.data)
+            return Response(userBaseSerializer.errors, status = 400)
     except Exception, e:
         print 'profile_user ', e
         error = {"code": 500, "message": _("Internal server error."), "fields": "", "flag": False}
         return Response(error, status=500)
+
 

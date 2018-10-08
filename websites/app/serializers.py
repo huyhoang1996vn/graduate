@@ -85,13 +85,19 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customers
         fields = '__all__'
 
-    def create(self, validated_data):
-        user_data = validated_data.pop('user')
-        userBases = UserBases.objects.create(**user_data)
-        customers = Customers.objects.create(user = userBases, **validated_data)
-        return customers
+    # def create(self, validated_data):
+    #     user_data = validated_data.pop('user')
+    #     userBases = UserBases.objects.create(**user_data)
+    #     customers = Customers.objects.create(user = userBases, **validated_data)
+    #     return customers
 
+# only chang name, avatar in profile
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.CharField( read_only = True)
 
+    class Meta:
+        model = UserBases
+        fields = ('first_name', 'last_name', 'avatar', 'email')
 
 
 

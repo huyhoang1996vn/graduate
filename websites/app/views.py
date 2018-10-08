@@ -43,6 +43,13 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ('name', )
     ordering_fields =  '__all__'
 
+    def list(self, request):
+        item = self.request.query_params.get('item', None)
+        if item:
+            result = Products.objects.all().order_by('created')[:item]
+            productSerializer =  ProductSerializer(result, many=True)
+            return Response(productSerializer.data)
+        return super(ProductViewSet, self).list(request) 
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

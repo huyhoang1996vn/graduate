@@ -18,7 +18,12 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^register/$', views.UserViewSet.as_view({'post': 'create'})),
     url(r'^profile/$', views.profile_user),
-    url(r'^login/', auth_view.obtain_auth_token, name='login'),
+    url(r'^login/$', auth_view.obtain_auth_token, name='login'),
+    url(r'^cart/$', views.view_cart, name='view_cart'),
+    url(r'^cart/modify/$', views.modify_cart, name='modify_cart'),
+
+    
+
 
 ]
     

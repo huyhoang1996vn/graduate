@@ -195,8 +195,17 @@ class Products(DateTimeModel):
     def __unicode__(self):
         return self.name
 
+class CartDetail(DateTimeModel):
+    product = models.ForeignKey('Products', on_delete=models.CASCADE)
+    cart = models.ForeignKey('Carts', on_delete=models.CASCADE)
+    quanlity = models.IntegerField(_('quanlity'))
+
+    def __unicode__(self):
+        return self.product
+
+
 class Carts(DateTimeModel):
-    products = models.ManyToManyField(Products, null=True, blank=True)
+    products = models.ManyToManyField(Products, through = CartDetail, related_name='cart_product_rel', null=True, blank=True)
     product_code = models.CharField(_("Product code"),max_length=255,null=True, blank=True)
 
     # def __unicode__(self):
@@ -205,8 +214,9 @@ class Carts(DateTimeModel):
     def __str__(self):
         return "%s" %(self.products)
 
+
 class Customers(models.Model):
-    user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
+    user = models.OneToOneField(UserBases, related_name="cus_user_rel", on_delete=models.CASCADE)
     cart = models.OneToOneField(Carts, related_name="cus_cart_rel", on_delete=models.CASCADE)
 
     # def __unicode__(self):

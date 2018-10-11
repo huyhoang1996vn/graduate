@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from models import *
+from django.conf import settings
+
 
 class UserBaseSerializer(serializers.ModelSerializer):
     roll = serializers.CharField( required = True, write_only = True)
@@ -43,7 +45,11 @@ class StoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PictureSerializer(serializers.ModelSerializer):
-	
+    # image = serializers.SerializerMethodField()
+
+    # def get_image(self, obj):
+    #     return '%s%s' % (settings.MEDIA_URL, obj.image)
+
     class Meta:
         model = Pictures
         fields = '__all__'
@@ -100,5 +106,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'avatar', 'email')
 
 
+class AddCartSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField(required = True, min_value =0)
+    quanlity = serializers.IntegerField(required = True, min_value =0)
+
+    def validate_product_id(self, value):
+        product = Products.objects.filter( id = value)
+        if not product:
+            raise serializers.ValidationError("Product not found.")
+        return value
 
 

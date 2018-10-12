@@ -117,3 +117,13 @@ class AddCartSerializer(serializers.Serializer):
         return value
 
 
+class CartDetailSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+
+    class Meta:
+        model = CartDetail
+        fields = ('product', 'quanlity')
+
+
+# fields = ProductSerializer.Meta.fields + 'quanlity'
+

@@ -6,10 +6,10 @@ from models import *
 from rest_framework import viewsets
 from serializers import *
 # from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.decorators import login_required
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 
@@ -75,7 +75,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['GET', 'PUT'])
-@login_required
+@permission_classes((IsAuthenticated, ))
 def profile_user(request):
     try:
         if request.method == 'GET':
@@ -98,12 +98,15 @@ def profile_user(request):
 
 
 @api_view(['GET', ])
-@login_required
+@permission_classes((IsAuthenticated, ))
 def view_cart(request):
     try:
         user = request.user
         cart = Carts.objects.get(cus_cart_rel=user.cus_user_rel)
-        return Response(CartSerializer(cart).data)
+        cart_detail = CartDetail.objects.filter(cart = cart)
+        serializer = CartDetailSerializer(cart_detail, context={'request': request}, many=True)
+
+        return Response(serializer.data)
     except Exception, e:
         print 'profile_user ', e
         error = {"code": 500, "message": _(
@@ -112,7 +115,7 @@ def view_cart(request):
 
 
 @api_view(['POST', ])
-@login_required
+@permission_classes((IsAuthenticated, ))
 def modify_cart(request):
     try:
         addCartSerializer = AddCartSerializer(data = request.data)

@@ -9,7 +9,7 @@ from serializers import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 # Create your views here.
 
 
@@ -40,6 +40,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_fields = ('category', 'stores')
     search_fields = ('name', )
     ordering_fields = '__all__'
+    # permission_classes = (AllowAny, )
+    # authentication_classes = ()
 
     def list(self, request):
         item = self.request.query_params.get('item', None)
@@ -153,3 +155,29 @@ def modify_cart(request):
         error = {"code": 500, "message": _(
             "Internal server error."), "fields": ""}
         return Response(error, status=500)
+
+
+
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, ))
+def change_passqord(request):
+    try:
+
+        passwod_serializer = PasswordSerializer(data= request.data)
+        if passwod_serializer.is_valid():
+            user = request.user
+            
+            if not user.check_password(passwod_serializer.data.get('old_password')):
+                return Response({'message': _("The old password fields did not match.")}, status=400)
+            
+            user.set_password(passwod_serializer.data.get("new_password"))
+            user.save()
+            return Response({'message': _('success')})
+        return Response(passwod_serializer.errors, status=400)
+
+    except Exception, e:
+        print 'Error change_passqord ', e
+        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        return Response(error, status=500)
+
+

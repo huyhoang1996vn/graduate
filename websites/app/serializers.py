@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from models import *
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 
 class UserBaseSerializer(serializers.ModelSerializer):
@@ -127,3 +128,12 @@ class CartDetailSerializer(serializers.ModelSerializer):
 
 # fields = ProductSerializer.Meta.fields + 'quanlity'
 
+class PasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField( required=True )
+    new_password = serializers.CharField( required=True )
+    new_password2 = serializers.CharField( required=True )
+
+    def validate(self, data):
+        if data['new_password'] != data['new_password2']:
+            raise serializers.ValidationError(_("The two password fields did not match."))
+        return data

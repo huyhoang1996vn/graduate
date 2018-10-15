@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
@@ -107,8 +108,14 @@ def view_cart(request):
         cart = Carts.objects.get(cus_cart_rel=user.cus_user_rel)
         cart_detail = CartDetail.objects.filter(cart = cart)
         serializer = CartDetailSerializer(cart_detail, context={'request': request}, many=True)
+        total_price = 0
+        for item in cart_detail:
+            total_price += item.product.price * item.quanlity
 
-        return Response(serializer.data)
+        # serializer.data object is a instance of ReturnList that is immutable
+        new_serializer_data = serializer.data
+        new_serializer_data.append({'total_price': total_price})
+        return Response(new_serializer_data)
     except Exception, e:
         print 'profile_user ', e
         error = {"code": 500, "message": _(
@@ -125,7 +132,7 @@ def modify_cart(request):
             product_id = addCartSerializer.data['product_id']
             quanlity = addCartSerializer.data['quanlity']
 
-            customer = Customers.objects.get(user = request.user)
+            customer = request.user.cus_user_rel
             cart_detail = CartDetail.objects.filter( cart = customer.cart, product = product_id )
             '''
                 if cart detail exist then update or delete
@@ -143,7 +150,14 @@ def modify_cart(request):
                 new_prodduct = CartDetail(cart = customer.cart, product = product, quanlity = quanlity)
                 new_prodduct.save()
 
-            return Response({'message':"success"})
+            '''
+                Retrun total price after update cart 
+            '''
+            cart_detail = CartDetail.objects.filter(cart = customer.cart)
+            total_price = 0
+            for item in cart_detail:
+                total_price += item.product.price * item.quanlity
+            return Response({'total_price': total_price})
         return Response(addCartSerializer.errors, status=400)
 
     except Customers.DoesNotExist:
@@ -160,6 +174,7 @@ def modify_cart(request):
 
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated, ))
+@csrf_exempt
 def change_passqord(request):
     try:
 
@@ -179,5 +194,27 @@ def change_passqord(request):
         print 'Error change_passqord ', e
         error = {"code": 500, "message": "%s" % e, "fields": ""}
         return Response(error, status=500)
+
+
+# @api_view(['POST'])
+# def payment(request):
+#     try:
+#         list_product = request.data.get('product', None)
+#         money = request.data.get('money', None)
+
+#         if not list_product:
+#             return Response({'message': _('List product is required.')}, status=400)
+#         for item in list_product:
+#             product = Products.objects.get(id = item.product_id)
+#             new_order = OrderInfomations( money = money )
+#             new_order.save()
+#             new_order.products.add(product)
+            
+
+
+#     except Exception, e:
+#         print 'Error change_passqord ', e
+#         error = {"code": 500, "message": "%s" % e, "fields": ""}
+#         return Response(error, status=500)
 
 

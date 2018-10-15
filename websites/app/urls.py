@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^cart/$', views.view_cart, name='view_cart'),
     url(r'^cart/modify/$', views.modify_cart, name='modify_cart'),
     url(r'^change/password/$', views.change_passqord, name="change-passqord"),
+    # url(r'^pay/$', views.payment, name="change-passqord"),
     
 
 

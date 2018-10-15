@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
@@ -174,7 +174,6 @@ def modify_cart(request):
 
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated, ))
-@csrf_exempt
 def change_passqord(request):
     try:
 

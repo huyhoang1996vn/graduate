@@ -4,6 +4,7 @@ from rest_framework import routers
 from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework.authtoken import views as auth_view
+from django.views.decorators.csrf import csrf_exempt
 
 router = routers.DefaultRouter()
 router.register(r'userbase', views.UserViewSet)
@@ -21,7 +22,7 @@ urlpatterns = [
     url(r'^login/$', auth_view.obtain_auth_token, name='login'),
     url(r'^cart/$', views.view_cart, name='view_cart'),
     url(r'^cart/modify/$', views.modify_cart, name='modify_cart'),
-    url(r'^change/password/$', views.change_passqord, name="change-passqord"),
+    url(r'^change/password/$', csrf_exempt(views.change_passqord), name="change-passqord"),
     # url(r'^pay/$', views.payment, name="change-passqord"),
     
 

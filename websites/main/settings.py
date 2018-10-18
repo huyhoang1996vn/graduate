@@ -167,7 +167,6 @@ credentials ={
     'PWD' : 'CURAGKL6V65X779C', # Edit this to your API password
     'SIGNATURE' : 'A6Se6BKM-0-Ibix7u0SeowrpNEY7A.1oJIvSsDWL9bWeQB6B1FNSyIwA', 
     # 'SUBJECT': credentials['FACILITATOR_EMAIL'],
-
 }
 
 

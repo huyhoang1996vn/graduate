@@ -11,7 +11,9 @@ from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.permissions import IsAuthenticated, AllowAny
 import uuid
-# from django.views.decorators.csrf import csrf_exempt
+import requests
+import urlparse
+from main.settings import credentials
 # Create your views here.
 
 
@@ -251,10 +253,10 @@ def create_order(request):
         return Response(error, status=500)
 
 
-import requests
-import urlparse
-from main.settings import credentials
 
+'''
+    Make request paypal to get token
+'''
 
 @api_view(['GET'])
 def redirect_paypal(request):
@@ -269,8 +271,8 @@ def redirect_paypal(request):
             'SIGNATURE': credentials['SIGNATURE'],
             'METHOD': 'SetExpressCheckout',
             'VERSION': 86,
-            'PAYMENTREQUEST_0_PAYMENTACTION': 'SALE',     # type of payment
-            'PAYMENTREQUEST_0_AMT': money,              # amount of transaction
+            'PAYMENTREQUEST_0_PAYMENTACTION': 'SALE',
+            'PAYMENTREQUEST_0_AMT': money,           
             'PAYMENTREQUEST_0_CURRENCYCODE': 'USD',
             # For use if the consumer decides not to proceed with payment
             'cancelUrl': "http://127.0.0.1:8000/api/paypal/confirm",
@@ -293,6 +295,10 @@ def redirect_paypal(request):
         error = {"code": 500, "message": "%s" % e, "fields": ""}
         return Response(error, status=500)
 
+
+'''
+    Get detail transaction payment
+'''
 
 @api_view(['GET'])
 def payment_confirm(request):
@@ -331,6 +337,9 @@ def payment_confirm(request):
         error = {"code": 500, "message": "%s" % e, "fields": ""}
         return Response(error, status=500)
 
+'''
+    Make request to facilitator get amout from buyer
+'''
 
 def handle_payment(token, payerID, money):
     response_data = {}
@@ -377,6 +386,11 @@ def handle_payment(token, payerID, money):
         print 'Error handle_payment ', e
         return response_data
 
+
+
+'''
+    Create order after payment by paypal
+'''
 
 @api_view(['POST'])
 def payment(request):

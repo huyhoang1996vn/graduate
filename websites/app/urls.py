@@ -23,8 +23,11 @@ urlpatterns = [
     url(r'^cart/$', views.view_cart, name='view_cart'),
     url(r'^cart/modify/$', views.modify_cart, name='modify_cart'),
     url(r'^change/password/$', csrf_exempt(views.change_passqord), name="change-passqord"),
-    # url(r'^pay/$', views.payment, name="change-passqord"),
-    
+    url(r'^paypal/redirect', views.redirect_paypal, name="change-passqord"),
+    url(r'^paypal/confirm', views.payment_confirm, name="change-passqord"),
+    url(r'^paypal/payment/$', views.payment, name="change-passqord"),
+    url(r'^order/create/$', views.create_order, name="change-passqord"),
+
 
 
 ]

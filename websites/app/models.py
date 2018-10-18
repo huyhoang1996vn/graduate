@@ -232,29 +232,44 @@ class Customers(models.Model):
             self.cart = cart
         super(Customers, self).save(*args, **kwargs)
 
+class OrderDetails(DateTimeModel):
+    orderInfomation = models.ForeignKey('OrderInfomations', on_delete=models.CASCADE)
+    product = models.ForeignKey('Products', on_delete=models.CASCADE)
+    quanlity = models.IntegerField(_('quanlity'))
 
+    def __unicode__(self):
+        return self.product
+        
 class OrderInfomations(DateTimeModel):
-    order_type = (
+    STATUS_ORDER = (
         ('cancel', 'Cancel'),
         ('payment_error', 'Payment Error'),
-        ('create', 'Create'),
+        ('waiting', 'Waiting'),
+        ('accept', 'Accept'),
         ('shipping', 'Shipping'),
         ('done', 'Done')
     )
 
-    payment_type = (
+    STATUS_PAYMENT = (
         ('payment_error', 'Payment Error'),
         ('pendding', 'Pendding'),
         ('done', 'Done')
     )
-    customer = models.ForeignKey('Customers', on_delete=models.CASCADE)
+    PAYMENT_METHOD = (
+        ('ship_code', 'Ship code'),
+        ('paypal', 'Paypal')
+    )
+    customer = models.ForeignKey('Customers', on_delete=models.CASCADE, null=True, blank=True)
     store = models.ForeignKey('Stores', on_delete=models.CASCADE)
+    products = models.ManyToManyField(Products, through = OrderDetails, related_name='order_product_rel')
     order_code = models.CharField(_('order_code'), max_length=250, blank=True)
     money = models.CharField(_('money'), max_length=250, null=True, blank=True)
-    status_payment = models.CharField(_('status_payment'), max_length=250, choices=payment_type, default="Pendding")
-    payment_method = models.CharField(_('payment_method'), max_length=250, null=True, blank=True)
-    status_order = models.CharField(max_length=255, choices=order_type, default="Create")
-
+    status_payment = models.CharField(_('status_payment'), max_length=250, choices=STATUS_PAYMENT, default="pendding")
+    payment_method = models.CharField(_('payment_method'), max_length=250, choices=PAYMENT_METHOD, default="ship_code")
+    status_order = models.CharField(max_length=255, choices=STATUS_ORDER, default="create")
+    transaction_id = models.CharField(_('transaction_id'), max_length=250, null=True, blank=True)
+    payer_id = models.CharField(_('payer_id'), max_length=250, null=True, blank=True)
+    
     def __unicode__(self):
         return self.customer
 
@@ -287,14 +302,6 @@ class ShipInfomations(DateTimeModel):
     def __unicode__(self):
         return self.email
 
-class OrderDetails(DateTimeModel):
-    orderInfomation = models.ForeignKey('OrderInfomations', on_delete=models.CASCADE)
-    product = models.ForeignKey('Products', on_delete=models.CASCADE)
-    price = models.CharField(_('price'), max_length=250, null=True, blank=True)
-    tax = models.IntegerField(_('tax'))
-    quanlity = models.IntegerField(_('quanlity'))
 
-    def __unicode__(self):
-        return self.product
 
 

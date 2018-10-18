@@ -137,3 +137,21 @@ class PasswordSerializer(serializers.Serializer):
         if data['new_password'] != data['new_password2']:
             raise serializers.ValidationError(_("The two password fields did not match."))
         return data
+
+
+
+class ShipSerializer(serializers.Serializer):
+
+    phone = serializers.CharField( required=True )
+    email = serializers.CharField( required=False )
+    address = serializers.CharField( required=True )
+    first_name = serializers.CharField( required=True )
+    last_name = serializers.CharField( required=True )
+    orderInfomation = serializers.CharField( required=False )
+
+    def save(self , *args, **kwargs):
+        order = OrderInfomations.objects.get(id = kwargs['order'])
+        ship = ShipInfomations(orderInfomation = order, **self.validated_data)
+        ship.save()
+        return ship
+

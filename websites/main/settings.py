@@ -162,4 +162,13 @@ AUTH_USER_MODEL = 'app.UserBases'
 LOGIN_URL=reverse_lazy('login')
 # LOGIN_REDIRECT_URL='/api/login'
 
+credentials ={
+    'USER' : 'huyhoang1996ha_api1.gmail.com', # Edit this to your API user name
+    'PWD' : 'CURAGKL6V65X779C', # Edit this to your API password
+    'SIGNATURE' : 'A6Se6BKM-0-Ibix7u0SeowrpNEY7A.1oJIvSsDWL9bWeQB6B1FNSyIwA', 
+    # 'SUBJECT': credentials['FACILITATOR_EMAIL'],
+
+}
+
+
 from config.setting_local import *

@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 import uuid
 import requests
 import urlparse
-from main.settings import credentials
+from main import settings
 # Create your views here.
 
 
@@ -237,6 +237,9 @@ def create_order(request):
                     order_detail = OrderDetails(
                         product=product, orderInfomation=new_order, quanlity=item['quanlity'])
                     order_detail.save()
+                    # remove cart when order
+                    if request.user.is_authenticated():
+                        CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
 
             except Products.DoesNotExist, e:
                 return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
@@ -266,18 +269,16 @@ def redirect_paypal(request):
             return Response({'message': _('Money is required.')}, status=400)
 
         data = {
-            'USER': credentials['USER'],
-            'PWD': credentials['PWD'],
-            'SIGNATURE': credentials['SIGNATURE'],
+            'USER': settings.credentials['USER'],
+            'PWD': settings.credentials['PWD'],
+            'SIGNATURE': settings.credentials['SIGNATURE'],
             'METHOD': 'SetExpressCheckout',
             'VERSION': 86,
             'PAYMENTREQUEST_0_PAYMENTACTION': 'SALE',
             'PAYMENTREQUEST_0_AMT': money,           
             'PAYMENTREQUEST_0_CURRENCYCODE': 'USD',
-            # For use if the consumer decides not to proceed with payment
-            'cancelUrl': "http://127.0.0.1:8000/api/paypal/confirm",
-            # For use if the consumer proceeds with payment
-            'returnUrl': "http://127.0.0.1:8000/api/paypal/confirm"
+            'cancelUrl': settings.cancelUrl,
+            'returnUrl': settings.returnUrl
         }
         PAYPAL_URL = 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkout&token='
         # gets the response and parse it.
@@ -309,9 +310,9 @@ def payment_confirm(request):
             return Response({'message': _('List token and payerID is required.')}, status=400)
 
         data = {
-            'USER': credentials['USER'],
-            'PWD': credentials['PWD'],
-            'SIGNATURE': credentials['SIGNATURE'],
+            'USER': settings.credentials['USER'],
+            'PWD': settings.credentials['PWD'],
+            'SIGNATURE': settings.credentials['SIGNATURE'],
             'METHOD': 'GetExpressCheckoutDetails',
             'VERSION': 93,
             'TOKEN': token
@@ -347,9 +348,9 @@ def handle_payment(token, payerID, money):
     try:
 
         data = {
-            'USER': credentials['USER'],
-            'PWD': credentials['PWD'],
-            'SIGNATURE': credentials['SIGNATURE'],
+            'USER': settings.credentials['USER'],
+            'PWD': settings.credentials['PWD'],
+            'SIGNATURE': settings.credentials['SIGNATURE'],
             'METHOD': 'DoExpressCheckoutPayment',
             'VERSION': 93,
             'TOKEN': token,
@@ -437,6 +438,9 @@ def payment(request):
                     order_detail = OrderDetails(
                         product=product, orderInfomation=new_order, quanlity=item['quanlity'])
                     order_detail.save()
+                    # remove cart when order
+                    if request.user.is_authenticated() and response['status'] == True:
+                        CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
 
             except Products.DoesNotExist, e:
                 return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)

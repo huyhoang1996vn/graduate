@@ -450,3 +450,21 @@ def payment(request):
         print 'Error payment ', e
         error = {"code": 500, "message": "%s" % e, "fields": ""}
         return Response(error, status=500)
+
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def list_order(request):
+    try:
+        customer = request.user.cus_user_rel
+        orders = OrderInfomations.objects.filter( customer= customer )
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
+
+    except Exception, e:
+        print 'Error payment ', e
+        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        return Response(error, status=500)
+
+

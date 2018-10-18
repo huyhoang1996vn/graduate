@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^paypal/confirm', views.payment_confirm, name="change-passqord"),
     url(r'^paypal/payment/$', views.payment, name="change-passqord"),
     url(r'^order/create/$', views.create_order, name="change-passqord"),
+    url(r'^order/list/$', views.list_order, name="change-passqord"),
 
 
 

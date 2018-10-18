@@ -155,3 +155,10 @@ class ShipSerializer(serializers.Serializer):
         ship.save()
         return ship
 
+
+class OrderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderInfomations
+        fields = '__all__'
+

@@ -109,7 +109,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class AddCartSerializer(serializers.Serializer):
     product_id = serializers.IntegerField(required = True, min_value =0)
-    quanlity = serializers.IntegerField(required = True, min_value =0)
+    quantity = serializers.IntegerField(required = True, min_value =0)
 
     def validate_product_id(self, value):
         product = Products.objects.filter( id = value)
@@ -123,10 +123,10 @@ class CartDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartDetail
-        fields = ('product', 'quanlity')
+        fields = ('product', 'quantity')
 
 
-# fields = ProductSerializer.Meta.fields + 'quanlity'
+# fields = ProductSerializer.Meta.fields + 'quantity'
 
 class PasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField( required=True )

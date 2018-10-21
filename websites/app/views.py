@@ -115,7 +115,7 @@ def view_cart(request):
             cart_detail, context={'request': request}, many=True)
         total_price = 0
         for item in cart_detail:
-            total_price += item.product.price * item.quanlity
+            total_price += item.product.price * item.quantity
 
         # serializer.data object is a instance of ReturnList that is immutable
         new_serializer_data = serializer.data
@@ -135,26 +135,26 @@ def modify_cart(request):
         addCartSerializer = AddCartSerializer(data=request.data)
         if addCartSerializer.is_valid():
             product_id = addCartSerializer.data['product_id']
-            quanlity = addCartSerializer.data['quanlity']
+            quantity = addCartSerializer.data['quantity']
 
             customer = request.user.cus_user_rel
             cart_detail = CartDetail.objects.filter(
                 cart=customer.cart, product=product_id)
             '''
                 if cart detail exist then update or delete
-                if not cart detail and quanlity > 0 then create 
+                if not cart detail and quantity > 0 then create 
             '''
             if cart_detail:
-                if quanlity == 0:
+                if quantity == 0:
                     cart_detail.delete()
                 else:
                     cart_detail = cart_detail.get()
-                    cart_detail.quanlity = quanlity
+                    cart_detail.quantity = quantity
                     cart_detail.save()
-            elif quanlity > 0:
+            elif quantity > 0:
                 product = Products.objects.get(id=product_id)
                 new_prodduct = CartDetail(
-                    cart=customer.cart, product=product, quanlity=quanlity)
+                    cart=customer.cart, product=product, quantity=quantity)
                 new_prodduct.save()
 
             '''
@@ -163,7 +163,7 @@ def modify_cart(request):
             cart_detail = CartDetail.objects.filter(cart=customer.cart)
             total_price = 0
             for item in cart_detail:
-                total_price += item.product.price * item.quanlity
+                total_price += item.product.price * item.quantity
             return Response({'total_price': total_price})
         return Response(addCartSerializer.errors, status=400)
 
@@ -235,7 +235,7 @@ def create_order(request):
                 for item in list_product:
                     product = Products.objects.get(id=item['product_id'])
                     order_detail = OrderDetails(
-                        product=product, orderInfomation=new_order, quanlity=item['quanlity'])
+                        product=product, orderInfomation=new_order, quantity=item['quantity'])
                     order_detail.save()
                     # remove cart when order
                     if request.user.is_authenticated():
@@ -436,7 +436,7 @@ def payment(request):
                 for item in list_product:
                     product = Products.objects.get(id=item['product_id'])
                     order_detail = OrderDetails(
-                        product=product, orderInfomation=new_order, quanlity=item['quanlity'])
+                        product=product, orderInfomation=new_order, quantity=item['quantity'])
                     order_detail.save()
                     # remove cart when order
                     if request.user.is_authenticated() and response['status'] == True:

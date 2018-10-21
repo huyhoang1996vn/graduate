@@ -198,7 +198,7 @@ class Products(DateTimeModel):
 class CartDetail(DateTimeModel):
     product = models.ForeignKey('Products', on_delete=models.CASCADE)
     cart = models.ForeignKey('Carts', on_delete=models.CASCADE)
-    quanlity = models.IntegerField(_('quanlity'))
+    quantity = models.IntegerField(_('quantity'))
 
     def __unicode__(self):
         return self.product
@@ -235,7 +235,7 @@ class Customers(models.Model):
 class OrderDetails(DateTimeModel):
     orderInfomation = models.ForeignKey('OrderInfomations', on_delete=models.CASCADE)
     product = models.ForeignKey('Products', on_delete=models.CASCADE)
-    quanlity = models.IntegerField(_('quanlity'))
+    quantity = models.IntegerField(_('quantity'))
 
     def __unicode__(self):
         return self.product

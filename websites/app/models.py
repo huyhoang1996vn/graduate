@@ -274,10 +274,15 @@ class OrderInfomations(DateTimeModel):
         return self.customer
 
 class Feedbacks(DateTimeModel):
+    STAR_FEEDBACK = (
+        (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)
+    )
     customer = models.ForeignKey('Customers', on_delete=models.CASCADE)
     store = models.ForeignKey('Stores', on_delete=models.CASCADE)
     product = models.ForeignKey('Products', on_delete=models.CASCADE)
     detail =  models.CharField(max_length=255, null=True, blank=True)
+    star =  models.IntegerField( choices=STAR_FEEDBACK )
+
 
     def __unicode__(self):
         return self.customer

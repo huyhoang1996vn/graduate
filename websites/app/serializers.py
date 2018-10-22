@@ -162,3 +162,12 @@ class OrderSerializer(serializers.ModelSerializer):
         model = OrderInfomations
         fields = '__all__'
 
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    customer = serializers.CharField( required = False)
+
+    class Meta:
+        model = Feedbacks
+        fields = '__all__'
+
+

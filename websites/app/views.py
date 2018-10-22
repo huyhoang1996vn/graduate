@@ -472,3 +472,35 @@ def list_order(request):
         return Response(error, status=500)
 
 
+
+class FeedbackViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Feedbacks.objects.all()
+    serializer_class = FeedbackSerializer
+    filter_fields = ('product', 'store')
+
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        serializer.save( customer = self.request.user.cus_user_rel )
+
+    def perform_update(self, serializer):
+        serializer.save( customer = self.request.user.cus_user_rel )
+
+
+
+
+
+
+

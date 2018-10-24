@@ -181,7 +181,7 @@ class Products(DateTimeModel):
         ('oversell', 'Oversell'),
     )
     category = models.ManyToManyField(Categories)
-    stores = models.ManyToManyField(Stores)
+    stores = models.ForeignKey(Stores)
     supplier = models.ForeignKey('Suppliers', null=True, blank=True)
     name = models.CharField(_('name'), max_length=250, blank=False, null=False)
     detail = models.CharField(_('detail'), max_length=250, blank=True)
@@ -288,10 +288,11 @@ class Feedbacks(DateTimeModel):
         return self.customer
 
 class Suppliers(DateTimeModel):
-    name = models.CharField(_('name'), max_length=250, blank=True)
-    phone = models.CharField(_('phone'), max_length=250, blank=True)
+    name = models.CharField(_('name'), max_length=250, null=False, blank=False)
+    phone = models.CharField(_('phone'), max_length=250, null=False, blank=False)
+    address = models.CharField(_('address'), max_length=250, null=False, blank=False)
     is_active = models.BooleanField(_('active'), default=True)
-    soft_delete = models.DateTimeField(_('soft delete'), editable=False)
+    soft_delete = models.DateTimeField(_('soft delete'), editable=False, null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -300,7 +301,7 @@ class ShipInfomations(DateTimeModel):
     orderInfomation = models.OneToOneField('OrderInfomations', on_delete=models.CASCADE)
     phone = models.CharField(_('phone'), max_length=250, blank=True)
     email = models.EmailField(_('email'), max_length=250, blank=True)
-    address = models.EmailField(_('address'), max_length=250, blank=False)
+    address = models.CharField(_('address'), max_length=250, blank=False)
     first_name = models.CharField(_('first name'), max_length=250, blank=True)
     last_name = models.CharField(_('last name'), max_length=250, blank=True)
 

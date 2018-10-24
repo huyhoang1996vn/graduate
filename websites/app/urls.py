@@ -13,6 +13,9 @@ router.register(r'category', views.CategoryViewSet)
 router.register(r'owner', views.OwnerViewSet)
 router.register(r'customer', views.CustomerViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
+router.register(r'supplier', views.SupplierViewSet)
+router.register(r'order/store', views.OrderViewSet)
+
 
 
 

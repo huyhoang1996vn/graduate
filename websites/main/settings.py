@@ -150,7 +150,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DATETIME_FORMAT': "%H:%M:%S - %d/%m/%Y",
+    'DATE_FORMAT': "%d/%m/%Y",
+    "DATE_INPUT_FORMATS": ["%d/%m/%Y"],
+    "DATETIME_INPUT_FORMATS": ["%H:%M:%S - %d/%m/%Y"],
+     'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
     )
+
+
 }
 CORS_ORIGIN_ALLOW_ALL = True
 # path to outside file

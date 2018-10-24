@@ -14,6 +14,7 @@ import uuid
 import requests
 import urlparse
 from main import settings
+from rest_framework.parsers import MultiPartParser,JSONParser
 # Create your views here.
 
 
@@ -33,11 +34,11 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = UserBases.objects.all().order_by('-date_joined')
     serializer_class = UserBaseSerializer
 
-
 class ProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+    parser_classes = (MultiPartParser, JSONParser)
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
     # filter_backends = (SearchFilter, OrderingFilter)
@@ -46,6 +47,22 @@ class ProductViewSet(viewsets.ModelViewSet):
     ordering_fields = '__all__'
     # permission_classes = (AllowAny, )
     # authentication_classes = ()
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        serializer.save( stores = self.request.user.stores )
+
+    def perform_update(self, serializer):
+        serializer.save( stores = self.request.user.stores )
 
     def list(self, request):
         item = self.request.query_params.get('item', None)
@@ -63,6 +80,51 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = Categories.objects.all()
     serializer_class = CategorySerializer
+    
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+class SupplierViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Suppliers.objects.all()
+    serializer_class = SupplierSerializer
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = OrderInfomations.objects.all()
+    serializer_class = OrderSerializer
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
 
 class OwnerViewSet(viewsets.ModelViewSet):
@@ -480,7 +542,6 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedbacks.objects.all()
     serializer_class = FeedbackSerializer
     filter_fields = ('product', 'store')
-
 
     def get_permissions(self):
         """

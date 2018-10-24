@@ -55,14 +55,25 @@ class PictureSerializer(serializers.ModelSerializer):
         model = Pictures
         fields = '__all__'
 
-
 class ProductSerializer(serializers.ModelSerializer):
-    picture = PictureSerializer(many = True, required = False)
+    picture = PictureSerializer(many = True, read_only=True)
+    expire_date = serializers.DateField(format= "%d/%m/%Y", input_formats = ["%d/%m/%Y"])
+    # image = serializers.ImageField( write_only=True )
 
     class Meta:
         model = Products
         fields = '__all__'
 
+    # nested field picture
+    def create(self, validated_data):
+        picture_list = self.context['request'].data.getlist('image', None)
+        category = validated_data.pop('category', None)
+        product = Products.objects.create(**validated_data)
+        product.category.add(*category)
+        if picture_list:
+            for item in picture_list:
+                Pictures.objects.create( product = product, image = item)
+        return product
 
 class OwnerSerializer(serializers.ModelSerializer):
 
@@ -171,3 +182,14 @@ class FeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SupplierSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Suppliers
+        fields = '__all__'
+
+# class SupplierSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = OrderInfomation
+#         fields = '__all__'

@@ -5,6 +5,10 @@ from django.contrib import admin
 from models import *
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
+from django.forms import ModelForm, PasswordInput
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
+from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import ugettext_lazy as _
 
 
 class PictureInline(admin.TabularInline):
@@ -35,9 +39,34 @@ class OwnerAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Owners, OwnerAdmin)
 
-class UserBaseAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(UserBases, UserBaseAdmin)
+
+class UserBaseForm(UserChangeForm):
+    password = ReadOnlyPasswordHashField(label= ("Password"),
+        help_text= ("Change password using <a href=\"password/\">this form</a>."))
+    class Meta(UserChangeForm.Meta):
+        pass
+
+class CustomUserAdmin(UserAdmin):
+    add_form = UserCreationForm
+    form = UserBaseForm
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groupUser',)}),
+        # (_('Important dates'), {'fields': ('last_login',)}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2'),
+        }),
+    )
+    list_display = ('email', 'first_name', 'last_name', 'is_staff')
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email',)
+
+admin.site.register(UserBases, CustomUserAdmin)
 
 
 class CustomerForm(forms.ModelForm):
@@ -51,14 +80,3 @@ class CustomerAdmin(admin.ModelAdmin):
     form = CustomerForm
 admin.site.register(Customers, CustomerAdmin)
 
-
-
-# class AuthorAdmin(admin.ModelAdmin):
-#     pass
-# admin.site.register(Categories, AuthorAdmin)
-
-
-
-# class AuthorAdmin(admin.ModelAdmin):
-#     pass
-# admin.site.register(Categories, AuthorAdmin)

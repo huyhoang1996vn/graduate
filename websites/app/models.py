@@ -142,7 +142,7 @@ class DateTimeModel(models.Model):
 
 
 class Categories(DateTimeModel):
-    name = models.CharField(_('name'), max_length=250, blank=True)
+    name = models.CharField(_('name'), max_length=250, null=False, blank=False)
     detail = models.CharField(
         _('detail'), max_length=250, null=True, blank=True)
     is_active = models.BooleanField(_('active'), default=True)

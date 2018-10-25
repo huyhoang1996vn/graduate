@@ -115,16 +115,14 @@ class OrderViewSet(viewsets.ModelViewSet):
     """
     queryset = OrderInfomations.objects.all()
     serializer_class = OrderSerializer
-
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        if self.action == 'list' or self.action == 'retrieve':
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    permission_classes = (IsAuthenticated, )
+    filter_fields = ('status_order',)
+    
+    def list(self, request):
+        stores = request.user.stores
+        orders = OrderInfomations.objects.filter( store= stores )
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
 
 
 class OwnerViewSet(viewsets.ModelViewSet):

@@ -58,6 +58,7 @@ class PictureSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     picture = PictureSerializer(many = True, read_only=True)
     expire_date = serializers.DateField(format= "%d/%m/%Y", input_formats = ["%d/%m/%Y"])
+    stores = serializers.PrimaryKeyRelatedField(read_only=True)
     # image = serializers.ImageField( write_only=True )
 
     class Meta:
@@ -187,9 +188,3 @@ class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = Suppliers
         fields = '__all__'
-
-# class SupplierSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = OrderInfomation
-#         fields = '__all__'

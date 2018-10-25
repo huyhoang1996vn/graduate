@@ -42,7 +42,7 @@ admin.site.register(Owners, OwnerAdmin)
 
 class UserBaseForm(UserChangeForm):
     password = ReadOnlyPasswordHashField(label= ("Password"),
-        help_text= ("Change password using <a href=\"password/\">this form</a>."))
+        help_text= ("Change password using <a href=\"../password/\">this form</a>."))
     class Meta(UserChangeForm.Meta):
         pass
 

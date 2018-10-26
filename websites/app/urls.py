@@ -10,14 +10,10 @@ router = routers.DefaultRouter()
 router.register(r'userbase', views.UserViewSet)
 router.register(r'product', views.ProductViewSet)
 router.register(r'category', views.CategoryViewSet)
-router.register(r'owner', views.OwnerViewSet)
-router.register(r'customer', views.CustomerViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
 router.register(r'supplier', views.SupplierViewSet)
 router.register(r'order/store', views.OrderViewSet)
-
-
-
+router.register(r'store/owner', views.StoreViewSet, base_name='store-list')
 
 
 urlpatterns = [

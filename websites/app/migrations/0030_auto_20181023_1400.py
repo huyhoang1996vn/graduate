@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
         ),
     ]
 
-    print 'Remove m2m products vs store, add store onetomany product'  
+    print 'Remove m2m products vs store, add store onetomany product in 0030_auto_20181023_1400'  
     try:
         print 'Product has value show handle default value'
         store = apps.get_model(app_label='app', model_name='Stores').objects.all().first()

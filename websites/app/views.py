@@ -114,14 +114,14 @@ class OrderViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed or edited.
     """
     queryset = OrderInfomations.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = OrderOfStoreSerializer
     permission_classes = (IsAuthenticated, )
     filter_fields = ('status_order',)
     
     def list(self, request):
         stores = request.user.stores
         orders = OrderInfomations.objects.filter( store= stores )
-        serializer = OrderSerializer(orders, many=True)
+        serializer = OrderOfStoreSerializer(orders, many=True)
         return Response(serializer.data)
 
 
@@ -541,18 +541,19 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         serializer.save( customer = self.request.user.cus_user_rel )
 
-
+'''
+Show infor mation for STORE, not User
+'''
 class StoreViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    # queryset = UserBases.objects.filter( stores__isnull = False)
-    serializer_class = UserBaseSerializer
+    serializer_class = StoreSerializer
+    parser_classes = (MultiPartParser, JSONParser)
 
     def get_queryset(self):
         owner = self.request.user.owners
-        store_list = owner.stores_set.all()
-        return UserBases.objects.filter( stores__in = store_list)
+        return Stores.objects.filter( owners = owner)
          
 
 

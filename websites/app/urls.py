@@ -16,6 +16,7 @@ router.register(r'order/store', views.OrderViewSet)
 router.register(r'store/owner', views.StoreViewSet, base_name='store-list')
 
 
+
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^', include(router.urls)),

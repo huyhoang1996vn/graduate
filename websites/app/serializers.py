@@ -31,11 +31,11 @@ class UserBaseSerializer(serializers.ModelSerializer):
             customers = Customers.objects.create(user = userBase)
 
         # Create store by owner
-        elif roll == 'store':
-            store = Stores.objects.create(user = userBase)
-            user = self.context['request'].user
-            if hasattr(user, 'owners'):
-                store.owners.add(user.owners)
+        # elif roll == 'store':
+        #     store = Stores.objects.create(user = userBase)
+        #     user = self.context['request'].user
+        #     if hasattr(user, 'owners'):
+        #         store.owners.add(user.owners)
 
         # Doing create owner
         elif roll == 'owner':
@@ -158,6 +158,19 @@ class ShipSerializer(serializers.Serializer):
         ship.save()
         return ship
 
+# Auto create store
+class OrderOfStoreSerializer(serializers.ModelSerializer):
+    store = serializers.CharField( required = False)
+    
+    class Meta:
+        model = OrderInfomations
+        fields = '__all__'
+
+    def save(self):
+        order = OrderInfomations(**self.validated_data)
+        order.store = self.context['request'].user.stores
+        order.save()
+        return order
 
 class OrderSerializer(serializers.ModelSerializer):
 
@@ -174,8 +187,57 @@ class FeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+'''
+No revenlant with Store, only with product
+'''
 class SupplierSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Suppliers
         fields = '__all__'
+
+
+class StoreSerializer(serializers.ModelSerializer):
+    
+    '''
+    args is instance update
+    kwargs is data sent
+    '''
+    def __init__(self, *args, **kwargs):
+        super(StoreSerializer, self).__init__(*args, **kwargs) 
+        if args:
+            self.fields['email'].required = False
+            self.fields['password'].required = False
+        else:
+            self.fields['email'].required = True
+            self.fields['password'].required = True
+
+    email = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
+    user = serializers.CharField(required=False)
+
+    class Meta:
+        model = Stores
+        fields = '__all__'
+
+    def validate_email(self, value):
+        email_exist = UserBases.objects.filter(email = value)
+        if email_exist:
+            raise serializers.ValidationError("Email is exist.")
+        return value
+
+    def create(self, validated_data):
+        # Create userBase
+        userBase = UserBases(email = validated_data.pop('email'))
+        userBase.set_password(validated_data.pop('password'))
+        userBase.save()
+        # Create store
+        store = Stores(user = userBase, **validated_data)
+        store.save()
+
+        # Create store by owner
+        user = self.context['request'].user
+        if hasattr(user, 'owners'):
+            store.owners = user.owners
+            store.save()
+        return store

@@ -152,9 +152,9 @@ class Categories(DateTimeModel):
 
 
 class Stores(DateTimeModel):
-    owners = models.ManyToManyField(Owners, null=True, blank=True)
+    owners = models.ForeignKey(Owners, null=True, blank=True)
     user = models.OneToOneField(UserBases, on_delete=models.CASCADE)
-    name = models.CharField(_('name'), max_length=250, blank=False)
+    name = models.CharField(_('name'), max_length=250, blank=False, null=False)
     phone = models.CharField(_('phone'), max_length=250, blank=False)
     image = models.ImageField(
         max_length=1000, null=True, blank=True, upload_to="image")

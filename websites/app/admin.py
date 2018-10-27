@@ -80,3 +80,15 @@ class CustomerAdmin(admin.ModelAdmin):
     form = CustomerForm
 admin.site.register(Customers, CustomerAdmin)
 
+
+class SupplierAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Suppliers, SupplierAdmin)
+
+class OrderAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(OrderInfomations, OrderAdmin)
+
+class OrderDetailsAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(OrderDetails, OrderDetailsAdmin)

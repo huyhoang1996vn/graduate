@@ -237,8 +237,8 @@ class OrderDetails(DateTimeModel):
     product = models.ForeignKey('Products', on_delete=models.CASCADE)
     quantity = models.IntegerField(_('quantity'))
 
-    def __unicode__(self):
-        return self.product
+    def __str__(self):
+        return "%s" %(self.orderInfomation)
         
 class OrderInfomations(DateTimeModel):
     STATUS_ORDER = (
@@ -270,8 +270,8 @@ class OrderInfomations(DateTimeModel):
     transaction_id = models.CharField(_('transaction_id'), max_length=250, null=True, blank=True)
     payer_id = models.CharField(_('payer_id'), max_length=250, null=True, blank=True)
     
-    def __unicode__(self):
-        return self.customer
+    def __str__(self):
+        return "%s" %(self.customer)
 
 class Feedbacks(DateTimeModel):
     STAR_FEEDBACK = (

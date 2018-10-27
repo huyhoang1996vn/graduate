@@ -85,8 +85,18 @@ class SupplierAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Suppliers, SupplierAdmin)
 
+class ProductInline(admin.TabularInline):
+
+    model = OrderInfomations.products.through
+    verbose_name = u"products"
+    verbose_name_plural = u"products"
+
 class OrderAdmin(admin.ModelAdmin):
-    pass
+    exclude = ("products", )
+    inlines = (
+       ProductInline,
+    )
+    # filter_horizontal = ('products',)
 admin.site.register(OrderInfomations, OrderAdmin)
 
 class OrderDetailsAdmin(admin.ModelAdmin):

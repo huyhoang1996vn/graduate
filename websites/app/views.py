@@ -58,9 +58,11 @@ class ProductViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
+    # Create store by request.user
     def perform_create(self, serializer):
         serializer.save( stores = self.request.user.stores )
 
+    # Create store by request.user
     def perform_update(self, serializer):
         serializer.save( stores = self.request.user.stores )
 

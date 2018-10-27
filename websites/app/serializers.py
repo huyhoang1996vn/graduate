@@ -167,7 +167,7 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def save(self):
-        order = OrderInfomations(**self.validated_data)
+        order = super(OrderOfStoreSerializer, self).save()
         order.store = self.context['request'].user.stores
         order.save()
         return order

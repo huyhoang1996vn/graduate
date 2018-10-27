@@ -206,14 +206,11 @@ class StoreSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(StoreSerializer, self).__init__(*args, **kwargs) 
         if args:
-            self.fields['email'].required = False
-            self.fields['password'].required = False
-        else:
-            self.fields['email'].required = True
-            self.fields['password'].required = True
-
-    email = serializers.CharField(write_only=True)
-    password = serializers.CharField(write_only=True)
+            if self.fields.get('email',None): del self.fields['email']
+            if self.fields.get('password',None): del self.fields['password']
+            
+    email = serializers.CharField(write_only=True, required = True)
+    password = serializers.CharField(write_only=True, required = True)
     user = serializers.CharField(required=False)
 
     class Meta:
@@ -234,7 +231,6 @@ class StoreSerializer(serializers.ModelSerializer):
         # Create store
         store = Stores(user = userBase, **validated_data)
         store.save()
-
         # Create store by owner
         user = self.context['request'].user
         if hasattr(user, 'owners'):

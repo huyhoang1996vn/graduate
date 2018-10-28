@@ -102,3 +102,11 @@ admin.site.register(OrderInfomations, OrderAdmin)
 class OrderDetailsAdmin(admin.ModelAdmin):
     pass
 admin.site.register(OrderDetails, OrderDetailsAdmin)
+
+class GroupUserPermissionAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(GroupUserPermissions, GroupUserPermissionAdmin)
+
+class GroupUserAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(GroupUsers, GroupUserAdmin)

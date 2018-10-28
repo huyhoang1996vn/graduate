@@ -14,7 +14,6 @@ class Command(BaseCommand):
             list_permissions = Permission.objects.all()
             models = [ GroupUserPermissions(
                 name = item.name,
-                content_type = item.content_type_id,
                 codename = item.codename
                 ) for item in list_permissions]
 

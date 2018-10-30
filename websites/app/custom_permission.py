@@ -2,6 +2,7 @@ from models import *
 from rest_framework import permissions
 
 class CustomCheckPermission(permissions.BasePermission):
+
     perms_map = {
         'GET': '',
         'OPTIONS': '',
@@ -14,6 +15,9 @@ class CustomCheckPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         print "***** check has_object_permissions ****"
+        #  View is funtion, check permission in decoratoe
+        if not hasattr(view, 'queryset'):
+            return True
 
         if request.method in permissions.SAFE_METHODS:
             return True
@@ -27,20 +31,10 @@ class CustomCheckPermission(permissions.BasePermission):
         }
         codename = self.perms_map[request.method] % kwargs
         group = request.user.groupUser
+        print 'codename: %s, group: %s' %(codename, group)
         is_allow = GroupUserPermissions.objects.filter( codename = codename, groupUser = group)
         return True if is_allow else False
 
-        
-
-    # def has_object_permission(self, request, view, obj):
-    #     print "***** check has_object_permissions ****"
-    #     group = request.user.groupUser
-    #     # permission = group.group_per_rel.all()
-    #     model_name = obj.__class__.__name__
-    #     if request.method == 'POST':
-    #     	codename = 'add_%s'%(lower(model_name))
-    #     	is_allow = GroupUserPermissions.objects.filter( codename = codename, groupUser = group)
-    #     	return True if is_allow else False
 
 
 

@@ -145,6 +145,7 @@ REST_FRAMEWORK = {
         ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
+        # 'app.custom_permission.CustomCheckPermission',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',

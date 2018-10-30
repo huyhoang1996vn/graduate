@@ -227,7 +227,6 @@ class OrderDetails(DateTimeModel):
 class OrderInfomations(DateTimeModel):
     STATUS_ORDER = (
         ('cancel', 'Cancel'),
-        ('payment_error', 'Payment Error'),
         ('waiting', 'Waiting'),
         ('accept', 'Accept'),
         ('shipping', 'Shipping'),

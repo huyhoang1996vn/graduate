@@ -15,6 +15,8 @@ import requests
 import urlparse
 from main import settings
 from rest_framework.parsers import MultiPartParser,JSONParser
+from custom_permission import *
+from decorators import check_user_permission
 # Create your views here.
 
 
@@ -82,16 +84,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = Categories.objects.all()
     serializer_class = CategorySerializer
+    # permission_classes = (CustomCheckPermission, )
     
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        if self.action == 'list' or self.action == 'retrieve':
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    # def get_permissions(self):
+    #     """
+    #     Instantiates and returns the list of permissions that this view requires.
+    #     """
+    #     if self.action == 'list' or self.action == 'retrieve':
+    #         permission_classes = [AllowAny]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
 class SupplierViewSet(viewsets.ModelViewSet):
     """
@@ -176,6 +179,7 @@ def view_cart(request):
 
 @api_view(['POST', ])
 @permission_classes((IsAuthenticated, ))
+# @check_user_permission(['add_carts', 'change_carts'])
 def modify_cart(request):
     try:
         addCartSerializer = AddCartSerializer(data=request.data)
@@ -213,7 +217,7 @@ def modify_cart(request):
             return Response({'total_price': total_price})
         return Response(addCartSerializer.errors, status=400)
 
-    except Customers.DoesNotExist:
+    except Products.DoesNotExist:
         error = {"code": 400, "message": _(
             "Not found customer."), "fields": ""}
         return Response(error, status=400)
@@ -253,6 +257,7 @@ Create order for ship code
 
 
 @api_view(['POST'])
+# @check_user_permission(['add_orderinfomations', 'change_orderinfomations', 'delete_orderinfomations'])
 def create_order(request):
     try:
         data_product = request.data.pop('product', None)
@@ -308,6 +313,7 @@ def create_order(request):
 '''
 
 @api_view(['GET'])
+# @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def redirect_paypal(request):
     try:
         money = request.query_params.get('money', None)
@@ -348,6 +354,7 @@ def redirect_paypal(request):
 '''
 
 @api_view(['GET'])
+# @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def payment_confirm(request):
     try:
         token = request.query_params.get('token', None)
@@ -440,6 +447,7 @@ def handle_payment(token, payerID, money):
 '''
 
 @api_view(['POST'])
+# @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def payment(request):
     try:
         data_product = request.data.pop('product', None)

@@ -111,8 +111,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'avatar', 'email', 'role')
 
     def get_role(self, obj):
-        return obj.groupUser.name
-
+        data = obj.groupUser.name.replace('_group','')
+        return data
 
 class AddCartSerializer(serializers.Serializer):
     product_id = serializers.IntegerField(required = True, min_value =0)

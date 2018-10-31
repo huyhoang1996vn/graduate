@@ -558,6 +558,8 @@ class StoreViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+    # Fix CustomCheckPermission dont hace attr queryset from doc.
+    queryset = Stores.objects.none()
     serializer_class = StoreSerializer
     parser_classes = (MultiPartParser, JSONParser)
 

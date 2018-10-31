@@ -104,10 +104,14 @@ class CartSerializer(serializers.ModelSerializer):
 # only chang name, avatar in profile
 class ProfileSerializer(serializers.ModelSerializer):
     email = serializers.CharField( read_only = True)
+    role = serializers.SerializerMethodField()
 
     class Meta:
         model = UserBases
-        fields = ('first_name', 'last_name', 'avatar', 'email')
+        fields = ('first_name', 'last_name', 'avatar', 'email', 'role')
+
+    def get_role(self, obj):
+        return obj.groupUser.name
 
 
 class AddCartSerializer(serializers.Serializer):

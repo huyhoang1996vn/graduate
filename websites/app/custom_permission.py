@@ -14,7 +14,7 @@ class CustomCheckPermission(permissions.BasePermission):
     }
 
     def has_permission(self, request, view):
-        print "***** check has_object_permissions ****"
+        print "***** check has_object_permissions ****", view.queryset
         #  View is funtion, check permission in decoratoe
         if not hasattr(view, 'queryset'):
             return True

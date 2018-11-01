@@ -52,12 +52,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 
-class StoreSerializer(serializers.ModelSerializer):
-	
-    class Meta:
-        model = Stores
-        fields = '__all__'
-
 class PictureSerializer(serializers.ModelSerializer):
     # image = serializers.SerializerMethodField()
 

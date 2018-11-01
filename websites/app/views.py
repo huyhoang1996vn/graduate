@@ -148,8 +148,7 @@ def profile_user(request):
             return Response(userBaseSerializer.errors, status=400)
     except Exception, e:
         print 'profile_user ', e
-        error = {"code": 500, "message": _(
-            "Internal server error."), "fields": "", "flag": False}
+        error = {"code": 500, "message": "%s" %e, "fields": ""}
         return Response(error, status=500)
 
 
@@ -172,8 +171,7 @@ def view_cart(request):
         return Response(new_serializer_data)
     except Exception, e:
         print 'profile_user ', e
-        error = {"code": 500, "message": _(
-            "Internal server error."), "fields": "", "flag": False}
+        error = {"code": 500, "message": "%s" %e, "fields": ""}
         return Response(error, status=500)
 
 
@@ -223,8 +221,7 @@ def modify_cart(request):
         return Response(error, status=400)
     except Exception, e:
         print 'modify_cart ', e
-        error = {"code": 500, "message": _(
-            "Internal server error."), "fields": ""}
+        error = {"code": 500, "message": "%s" %e, "fields": ""}
         return Response(error, status=500)
 
 

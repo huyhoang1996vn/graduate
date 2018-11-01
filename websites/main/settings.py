@@ -158,6 +158,7 @@ REST_FRAMEWORK = {
     "DATETIME_INPUT_FORMATS": ["%H:%M:%S - %d/%m/%Y"],
      'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
     )
 
 

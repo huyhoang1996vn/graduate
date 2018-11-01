@@ -161,14 +161,7 @@ def view_cart(request):
         cart_detail = CartDetail.objects.filter(cart=cart)
         serializer = CartDetailSerializer(
             cart_detail, context={'request': request}, many=True)
-        total_price = 0
-        for item in cart_detail:
-            total_price += item.product.price * item.quantity
-
-        # serializer.data object is a instance of ReturnList that is immutable
-        new_serializer_data = serializer.data
-        new_serializer_data.append({'total_price': total_price})
-        return Response(new_serializer_data)
+        return Response(serializer.data)
     except Exception, e:
         print 'profile_user ', e
         error = {"code": 500, "message": "%s" %e, "fields": ""}
@@ -204,15 +197,7 @@ def modify_cart(request):
                 new_prodduct = CartDetail(
                     cart=customer.cart, product=product, quantity=quantity)
                 new_prodduct.save()
-
-            '''
-                Retrun total price after update cart 
-            '''
-            cart_detail = CartDetail.objects.filter(cart=customer.cart)
-            total_price = 0
-            for item in cart_detail:
-                total_price += item.product.price * item.quantity
-            return Response({'total_price': total_price})
+            return Response({'message': 'success'})
         return Response(addCartSerializer.errors, status=400)
 
     except Products.DoesNotExist:

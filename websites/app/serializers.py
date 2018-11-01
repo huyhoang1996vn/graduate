@@ -17,6 +17,8 @@ class UserBaseSerializer(serializers.ModelSerializer):
         Update is update Userbase
     '''
     def create(self, validated_data):
+        # validated_data = OrderedDict((k, v) for k, v in validated_data.items()  if v not in [None, [], '', {}])
+        
         roll = validated_data.get('roll', None)
         if roll:
             del validated_data['roll']

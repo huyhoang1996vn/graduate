@@ -17,6 +17,8 @@ from main import settings
 from rest_framework.parsers import MultiPartParser,JSONParser
 from custom_permission import *
 from decorators import check_user_permission
+import traceback
+
 # Create your views here.
 
 
@@ -35,6 +37,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = UserBases.objects.all().order_by('-date_joined')
     serializer_class = UserBaseSerializer
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
@@ -148,7 +151,7 @@ def profile_user(request):
             return Response(userBaseSerializer.errors, status=400)
     except Exception, e:
         print 'profile_user ', e
-        error = {"code": 500, "message": "%s" %e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 
@@ -164,7 +167,7 @@ def view_cart(request):
         return Response(serializer.data)
     except Exception, e:
         print 'profile_user ', e
-        error = {"code": 500, "message": "%s" %e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 
@@ -206,7 +209,7 @@ def modify_cart(request):
         return Response(error, status=400)
     except Exception, e:
         print 'modify_cart ', e
-        error = {"code": 500, "message": "%s" %e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 
@@ -229,7 +232,7 @@ def change_passqord(request):
 
     except Exception, e:
         print 'Error change_passqord ', e
-        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 
@@ -285,7 +288,7 @@ def create_order(request):
 
     except Exception, e:
         print 'Error change_passqord ', e
-        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 
@@ -327,7 +330,7 @@ def redirect_paypal(request):
         return Response(rurl)
     except Exception, e:
         print 'Error change_passqord ', e
-        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 
@@ -370,7 +373,7 @@ def payment_confirm(request):
 
     except Exception, e:
         print 'Error change_passqord ', e
-        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 '''
@@ -488,7 +491,7 @@ def payment(request):
 
     except Exception, e:
         print 'Error payment ', e
-        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 
@@ -504,7 +507,7 @@ def list_order(request):
 
     except Exception, e:
         print 'Error payment ', e
-        error = {"code": 500, "message": "%s" % e, "fields": ""}
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
 

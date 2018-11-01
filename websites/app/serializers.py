@@ -195,7 +195,7 @@ class SupplierSerializer(serializers.ModelSerializer):
         model = Suppliers
         fields = '__all__'
 
-
+# CRUD store by owner
 class StoreSerializer(serializers.ModelSerializer):
     
     '''
@@ -204,12 +204,13 @@ class StoreSerializer(serializers.ModelSerializer):
     '''
     def __init__(self, *args, **kwargs):
         super(StoreSerializer, self).__init__(*args, **kwargs) 
-        # Set non required if update
+        # Set non required if update and delete field user of userBases
+        if self.fields.get('user',None): del self.fields['user']
         if args:
             self.fields.get('email',None).required = False
             self.fields.get('password',None).required = False
             
-    email = serializers.CharField( required = True)
+    email = serializers.CharField(  required = True, source='user.email' )
     password = serializers.CharField(write_only=True, required = True)
 
     class Meta:
@@ -231,7 +232,8 @@ class StoreSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Create userBase
-        userBase = UserBases(email = validated_data.pop('email'))
+        user  = validated_data.pop('user', None)
+        userBase = UserBases(email = user['email'])
         userBase.set_password(validated_data.pop('password'))
         userBase.save()
         # Create store

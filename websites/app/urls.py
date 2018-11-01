@@ -7,7 +7,7 @@ from rest_framework.authtoken import views as auth_view
 from django.views.decorators.csrf import csrf_exempt
 
 router = routers.DefaultRouter()
-router.register(r'userbase', views.UserViewSet)
+router.register(r'userbase', views.UserBaseViewSet)
 router.register(r'product', views.ProductViewSet)
 router.register(r'category', views.CategoryViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^paypal/payment/$', views.payment, name="change-passqord"),
     url(r'^order/create/$', views.create_order, name="change-passqord"),
     url(r'^order/list/$', views.list_order, name="change-passqord"),
+    url(r'^group/user/$', views.get_group_user, name="get_group_user"),
 
 
 

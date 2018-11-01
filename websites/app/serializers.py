@@ -4,7 +4,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 
-class UserBaseSerializer(serializers.ModelSerializer):
+class RegiserSerializer(serializers.ModelSerializer):
     roll = serializers.CharField( required = True, write_only = True)
     password = serializers.CharField(write_only=True)
 
@@ -204,17 +204,24 @@ class StoreSerializer(serializers.ModelSerializer):
     '''
     def __init__(self, *args, **kwargs):
         super(StoreSerializer, self).__init__(*args, **kwargs) 
+        # Set non required if update
         if args:
-            if self.fields.get('email',None): del self.fields['email']
-            if self.fields.get('password',None): del self.fields['password']
+            self.fields.get('email',None).required = False
+            self.fields.get('password',None).required = False
             
-    email = serializers.CharField(write_only=True, required = True)
+    email = serializers.CharField( required = True)
     password = serializers.CharField(write_only=True, required = True)
-    user = serializers.CharField(required=False)
 
     class Meta:
         model = Stores
         fields = '__all__'
+
+    # Remove data email, password when update
+    def to_internal_value(self, data):
+        if self.instance:
+            data.pop('email', None)
+            data.pop('password', None)
+        return super(StoreSerializer, self).to_internal_value(data)
 
     def validate_email(self, value):
         email_exist = UserBases.objects.filter(email = value)
@@ -238,6 +245,43 @@ class StoreSerializer(serializers.ModelSerializer):
         return store
 
 
+class UserBaseSerializer(serializers.ModelSerializer):
+
+    def __init__(self, *args, **kwargs):
+        super(UserBaseSerializer, self).__init__(*args, **kwargs) 
+        # Set non required if update
+        if args:
+            self.fields.get('email',None).required = False
+            self.fields.get('password',None).required = False
+
+
+    groupUser = serializers.PrimaryKeyRelatedField(many=False, required=True, queryset= GroupUsers.objects.all())
+    password = serializers.CharField(write_only=True, required = True)
+    email = serializers.CharField( required = True)
+
+    class Meta:
+        model = UserBases
+        fields = '__all__'
+
+    # Remove data email, password when update
+    def to_internal_value(self, data):
+        if self.instance:
+            data.pop('email', None)
+            data.pop('password', None)
+        return super(UserBaseSerializer, self).to_internal_value(data)
+
+    def validate_email(self, value):
+        email_exist = UserBases.objects.filter(email = value)
+        if email_exist:
+            raise serializers.ValidationError("Email is exist.")
+        return value
+
+
+class GroupUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GroupUsers
+        fields = '__all__'
 
 
 

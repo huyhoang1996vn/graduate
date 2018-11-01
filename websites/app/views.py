@@ -18,7 +18,6 @@ from rest_framework.parsers import MultiPartParser,JSONParser
 from custom_permission import *
 from decorators import check_user_permission
 import traceback
-
 # Create your views here.
 
 
@@ -36,7 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed or edited.
     """
     queryset = UserBases.objects.all().order_by('-date_joined')
-    serializer_class = UserBaseSerializer
+    serializer_class = RegiserSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -143,12 +142,12 @@ def profile_user(request):
             return Response(userSerializer.data)
         else:
             user = request.user
-            userBaseSerializer = ProfileSerializer(
+            profileSerializer = ProfileSerializer(
                 instance=user, data=request.data)
-            if userBaseSerializer.is_valid():
-                userBaseSerializer.save()
-                return Response(userBaseSerializer.data)
-            return Response(userBaseSerializer.errors, status=400)
+            if profileSerializer.is_valid():
+                profileSerializer.save()
+                return Response(profileSerializer.data)
+            return Response(profileSerializer.errors, status=400)
     except Exception, e:
         print 'profile_user ', e
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
@@ -565,5 +564,25 @@ class OrderAdminViewSet(viewsets.ModelViewSet):
 
 
 
+
+class UserBaseViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = UserBases.objects.all()
+    serializer_class = UserBaseSerializer
+
+
+@api_view(['GET',])
+@permission_classes((IsAuthenticated, ))
+def get_group_user(request):
+    try:
+        group = GroupUsers.objects.all()
+        groupSerializer = GroupUserSerializer(group, many=True)
+        return Response(groupSerializer.data)
+    except Exception, e:
+        print 'profile_user ', e
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
+        return Response(error, status=500)
 
 

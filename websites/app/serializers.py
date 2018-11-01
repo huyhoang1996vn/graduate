@@ -10,7 +10,7 @@ class UserBaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserBases
-        fields = '__all__'
+        fields = ('last_name', 'first_name', 'email', 'password', 'roll', 'avatar')
 
     '''
         Create userbase with customer or store or owner
@@ -25,7 +25,6 @@ class UserBaseSerializer(serializers.ModelSerializer):
         userBase = UserBases(**validated_data)
         userBase.set_password(validated_data['password'])
         userBase.save()
-
         # Create customer
         if roll == 'customer':
             customers = Customers.objects.create(user = userBase)

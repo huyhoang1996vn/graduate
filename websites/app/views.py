@@ -537,7 +537,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         serializer.save( customer = self.request.user.cus_user_rel )
 
 '''
-Show infor mation for STORE, not User
+Show information for STORE, not User
 '''
 class StoreViewSet(viewsets.ModelViewSet):
     """
@@ -551,7 +551,19 @@ class StoreViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         owner = self.request.user.owners
         return Stores.objects.filter( owners = owner)
+
          
+class OrderAdminViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = OrderInfomations.objects.all()
+    serializer_class = OrderSerializer
+    filter_fields = ('status_order', 'store')
+    search_fields = ('order_code', 'status_order', 'store')
+    ordering_fields = '__all__'
+
+
 
 
 

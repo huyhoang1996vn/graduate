@@ -157,7 +157,7 @@ class ShipSerializer(serializers.Serializer):
         ship.save()
         return ship
 
-# Auto create store
+# Auto save store in order
 class OrderOfStoreSerializer(serializers.ModelSerializer):
     store = serializers.CharField( required = False)
     
@@ -236,3 +236,8 @@ class StoreSerializer(serializers.ModelSerializer):
             store.owners = user.owners
             store.save()
         return store
+
+
+
+
+

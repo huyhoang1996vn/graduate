@@ -39,9 +39,9 @@ class UserManager(BaseUserManager):
 
 class GroupUsers(models.Model):
     group_type  = (
-        ('customer_group', 'customer group'),
-        ('store_group', 'store group'),
-        ('owner_group', 'owner group'),
+        ('customer', 'customer'),
+        ('store', 'store'),
+        ('owner', 'owner'),
     )
     name = models.CharField(_('name'),choices=group_type, default="customer_group", max_length=250, unique = True)
 
@@ -227,7 +227,7 @@ class OrderDetails(DateTimeModel):
 class OrderInfomations(DateTimeModel):
     STATUS_ORDER = (
         ('cancel', 'Cancel'),
-        ('waiting', 'Waiting'),
+        ('pending', 'Pending'),
         ('accept', 'Accept'),
         ('shipping', 'Shipping'),
         ('done', 'Done')
@@ -235,7 +235,7 @@ class OrderInfomations(DateTimeModel):
 
     STATUS_PAYMENT = (
         ('payment_error', 'Payment Error'),
-        ('pendding', 'Pendding'),
+        ('pending', 'Pending'),
         ('done', 'Done')
     )
     PAYMENT_METHOD = (

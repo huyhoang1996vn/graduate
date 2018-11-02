@@ -14,7 +14,7 @@ router.register(r'feedback', views.FeedbackViewSet)
 router.register(r'supplier', views.SupplierViewSet)
 router.register(r'order/store', views.OrderViewSet)
 router.register(r'store/owner', views.StoreViewSet, base_name='store-list')
-router.register(r'order', views.OrderAdminViewSet)
+router.register(r'order/admin', views.OrderAdminViewSet)
 
 
 

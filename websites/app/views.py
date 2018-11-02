@@ -241,7 +241,6 @@ Create order for ship code
 
 
 @api_view(['POST'])
-# @check_user_permission(['add_orderinfomations', 'change_orderinfomations', 'delete_orderinfomations'])
 def create_order(request):
     try:
         data_product = request.data.pop('product', None)

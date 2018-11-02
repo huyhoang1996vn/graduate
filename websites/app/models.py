@@ -54,7 +54,7 @@ class GroupUsers(models.Model):
 
 class UserBases(AbstractBaseUser, PermissionsMixin):
     groupUser = models.ForeignKey(
-        'GroupUsers', on_delete=models.CASCADE, null=True, blank=True)
+        'GroupUsers', on_delete=models.SET_NULL, null=True, blank=True)
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=250, blank=True)
     last_name = models.CharField(_('last name'), max_length=250, blank=True)
@@ -94,7 +94,7 @@ class UserBases(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class GroupUserPermissions(models.Model):
-    groupUser = models.ForeignKey('GroupUsers', on_delete=models.CASCADE, null=True, blank=True)
+    groupUser = models.ForeignKey('GroupUsers', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(_('name'), max_length=255)
     codename = models.CharField(_('codename'), max_length=100)
 
@@ -169,7 +169,7 @@ class Products(DateTimeModel):
     )
     category = models.ManyToManyField(Categories)
     stores = models.ForeignKey(Stores)
-    supplier = models.ForeignKey('Suppliers', null=True, blank=True)
+    supplier = models.ForeignKey('Suppliers', on_delete=models.SET_NULL , null=True, blank=True)
     name = models.CharField(_('name'), max_length=250, blank=False, null=False)
     detail = models.CharField(_('detail'), max_length=250, blank=True)
     price = models.IntegerField(_('price'))
@@ -242,7 +242,7 @@ class OrderInfomations(DateTimeModel):
         ('ship_code', 'Ship code'),
         ('paypal', 'Paypal')
     )
-    customer = models.ForeignKey('Customers', on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey('Customers', on_delete=models.SET_NULL, null=True, blank=True)
     store = models.ForeignKey('Stores', on_delete=models.CASCADE)
     products = models.ManyToManyField(Products, through = OrderDetails, related_name='order_product_rel')
     order_code = models.CharField(_('order_code'), max_length=250, blank=True)

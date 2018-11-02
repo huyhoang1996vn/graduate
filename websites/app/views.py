@@ -120,11 +120,15 @@ class OrderViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = OrderInfomations.objects.all()
+    queryset = OrderInfomations.objects.none()
     serializer_class = OrderOfStoreSerializer
     permission_classes = (IsAuthenticated, )
     filter_fields = ('status_order',)
     
+    def get_queryset(self):
+        store = self.request.user.stores
+        return OrderInfomations.objects.filter( store = store)
+
     def list(self, request):
         stores = request.user.stores
         orders = OrderInfomations.objects.filter( store= stores )
@@ -262,7 +266,7 @@ def create_order(request):
         for store_id, list_product in data_product.items():
             try:
                 store = Stores.objects.get(id=store_id)
-                new_order = OrderInfomations(status_payment='pendding', payment_method='ship_code', status_order='waiting',
+                new_order = OrderInfomations(status_payment='pending', payment_method='ship_code', status_order='pending',
                                              money=money, store=store, customer=customer, order_code=uuid.uuid4())
                 new_order.save()
 
@@ -466,7 +470,7 @@ def payment(request):
         for store_id, list_product in data_product.items():
             try:
                 store = Stores.objects.get(id=store_id)
-                new_order = OrderInfomations(status_payment=status_payment, payment_method='paypal', status_order='waiting',
+                new_order = OrderInfomations(status_payment=status_payment, payment_method='paypal', status_order='pending',
                                              money=money, store=store, customer=customer, order_code=uuid.uuid4(), payer_id=payer_id, transaction_id=transaction_id)
                 new_order.save()
 
@@ -579,6 +583,33 @@ def get_group_user(request):
         group = GroupUsers.objects.all()
         groupSerializer = GroupUserSerializer(group, many=True)
         return Response(groupSerializer.data)
+    except Exception, e:
+        print 'profile_user ', e
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
+        return Response(error, status=500)
+
+
+
+
+@api_view(['PUT',])
+@permission_classes((IsAuthenticated, ))
+def cancel_order(request):
+    try:
+        order_code = request.data.get('order_code', None)
+        
+        if not order_code:
+            return Response({"message": 'Order code is required.'}, status = 400)
+        order = OrderInfomations.objects.get( order_code = order_code )
+        
+        if not order.customer.get().user == request.user:
+            return Response({"message": 'You don\'t has this order.'}, status = 400)
+
+        if order.status_order == 'pending':
+            order.status_order = 'cancel'
+            order.save()
+            return Response({'message': 'success'})
+        return Response({'message': 'Only cancel pending order, status current is %s' %order.status_order}, status = 400)
+
     except Exception, e:
         print 'profile_user ', e
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}

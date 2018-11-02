@@ -5,7 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class RegiserSerializer(serializers.ModelSerializer):
-    roll = serializers.CharField(required=True, write_only=True)
+    user_type = (
+        ('customer'),
+        ('store'),
+        ('owner')
+    )
+    roll = serializers.ChoiceField(required=True, write_only=True, choices = user_type)
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -161,19 +166,22 @@ class ShipSerializer(serializers.Serializer):
         ship.save()
         return ship
 
-# Auto save store in order
+# Only update 3 status of Order
 class OrderOfStoreSerializer(serializers.ModelSerializer):
     store = serializers.CharField(required=False)
+    money = serializers.CharField(read_only = True)
+    products = serializers.CharField(read_only = True)
+
 
     class Meta:
         model = OrderInfomations
         fields = '__all__'
 
-    def save(self):
-        order = super(OrderOfStoreSerializer, self).save()
-        order.store = self.context['request'].user.stores
-        order.save()
-        return order
+    # def save(self):
+    #     order = super(OrderOfStoreSerializer, self).save()
+    #     order.store = self.context['request'].user.stores
+    #     order.save()
+    #     return order
 
 
 class OrderSerializer(serializers.ModelSerializer):

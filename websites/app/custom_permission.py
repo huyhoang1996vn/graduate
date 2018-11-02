@@ -1,6 +1,7 @@
 from models import *
 from rest_framework import permissions
 
+
 class CustomCheckPermission(permissions.BasePermission):
 
     perms_map = {
@@ -15,6 +16,7 @@ class CustomCheckPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         print "***** check has_object_permissions ****", view.queryset
+
         #  View is funtion, check permission in decoratoe
         if not hasattr(view, 'queryset'):
             return True
@@ -29,12 +31,11 @@ class CustomCheckPermission(permissions.BasePermission):
             # 'app_label': view.queryset.model._meta.app_label,
             'model_name': view.queryset.model._meta.model_name
         }
+
         codename = self.perms_map[request.method] % kwargs
         group = request.user.groupUser
-        print 'codename: %s, group: %s' %(codename, group)
-        is_allow = GroupUserPermissions.objects.filter( codename = codename, groupUser = group)
+        print 'codename: %s, group: %s' % (codename, group)
+        
+        is_allow = GroupUserPermissions.objects.filter(
+            codename=codename, groupUser=group)
         return True if is_allow else False
-
-
-
-

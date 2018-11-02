@@ -5,6 +5,7 @@ from functools import wraps
 def check_user_permission(list_model):
 	def decorator(function):
 	    def wrap(request, *args, **kwargs):
+	    	
 	    	perms_map = {
 	            'GET': '',
 	            'OPTIONS': '',

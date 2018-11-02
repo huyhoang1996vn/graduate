@@ -10,7 +10,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            GroupUsers.objects.all().delete()
             models = [GroupUsers(name='customer', id=1), GroupUsers(
                 name='store', id=2), GroupUsers(name='owner', id=3)]
             GroupUsers.objects.bulk_create(models)

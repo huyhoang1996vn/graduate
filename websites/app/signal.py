@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 def save_customer_group(sender, instance, **kwargs):
 	print "** Acess Signal save_customer_group ***"
 	try:
-		groupUser = GroupUsers.objects.get(name='customer_group')
+		groupUser = GroupUsers.objects.get(name='customer')
 		instance.user.groupUser = groupUser
 		instance.user.save()
 	except Exception, e:
@@ -21,7 +21,7 @@ post_save.connect(save_customer_group, sender=Customers)
 def save_store_group(sender, instance, **kwargs):
 	print "** Acess Signal save_store_group ***"
 	try:
-		group_store = GroupUsers.objects.get(name='store_group')
+		group_store = GroupUsers.objects.get(name='store')
 		print 'instance.user ', instance.user
 		instance.user.groupUser = group_store
 		instance.user.save()
@@ -37,7 +37,7 @@ post_save.connect(save_store_group, sender=Stores)
 def save_owner_group(sender, instance, **kwargs):
 	print "** Acess Signal save_owner_group ***"
 	try:
-		group_owner = GroupUsers.objects.get(name = 'owner_group')
+		group_owner = GroupUsers.objects.get(name = 'owner')
 		instance.user.groupUser = group_owner
 		instance.user.save()
 	except Exception, e:

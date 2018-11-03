@@ -181,6 +181,12 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
         model = OrderInfomations
         fields = '__all__'
 
+    # Remove store when update order
+    def to_internal_value(self, data):
+        if self.instance:
+            data.pop('store', None)
+        return super(OrderOfStoreSerializer, self).to_internal_value(data)
+
     # def save(self):
     #     order = super(OrderOfStoreSerializer, self).save()
     #     order.store = self.context['request'].user.stores

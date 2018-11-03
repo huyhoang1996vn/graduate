@@ -118,7 +118,8 @@ class SupplierViewSet(viewsets.ModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    Get, Delete order of store
+    Update status order of store
     """
     queryset = OrderInfomations.objects.none()
     serializer_class = OrderOfStoreSerializer

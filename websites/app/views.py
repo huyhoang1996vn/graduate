@@ -599,14 +599,14 @@ def cancel_order(request):
         
         if not order_code:
             return Response({"message": 'Order code is required.'}, status = 400)
-        order = OrderInfomations.objects.get( order_code = order_code )
-        
-        if not order.customer.get().user == request.user:
-            return Response({"message": 'You don\'t has this order.'}, status = 400)
+
+        try:
+            order = OrderInfomations.objects.get( order_code = order_code, customer = request.user.cus_user_rel )
+        except OrderInfomations.DoesNotExist, e:
+            return Response({"message": 'Not found order.'}, status = 400)
 
         if order.status_order == 'pending':
-            order.status_order = 'cancel'
-            order.save()
+            order.delete()
             return Response({'message': 'success'})
         return Response({'message': 'Only cancel pending order, status current is %s' %order.status_order}, status = 400)
 

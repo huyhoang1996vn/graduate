@@ -115,7 +115,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'avatar', 'email', 'role')
 
     def get_role(self, obj):
-        return obj.groupUser.name
+        if obj.is_superuser:
+            return 'admin'
+        if obj.groupUser:
+            return obj.groupUser.name
+        return None
 
 
 class AddCartSerializer(serializers.Serializer):

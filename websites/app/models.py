@@ -226,17 +226,17 @@ class OrderDetails(DateTimeModel):
         
 class OrderInfomations(DateTimeModel):
     STATUS_ORDER = (
-        ('cancel', 'Cancel'),
+        ('canceled', 'Canceled'),
         ('pending', 'Pending'),
-        ('accept', 'Accept'),
+        ('accepted', 'Accepted'),
         ('shipping', 'Shipping'),
-        ('done', 'Done')
+        ('completed', 'Completed')
     )
 
     STATUS_PAYMENT = (
         ('payment_error', 'Payment Error'),
         ('pending', 'Pending'),
-        ('done', 'Done')
+        ('completed', 'Completed')
     )
     PAYMENT_METHOD = (
         ('ship_code', 'Ship code'),
@@ -247,9 +247,9 @@ class OrderInfomations(DateTimeModel):
     products = models.ManyToManyField(Products, through = OrderDetails, related_name='order_product_rel')
     order_code = models.CharField(_('order_code'), max_length=250, blank=True)
     money = models.CharField(_('money'), max_length=250, null=True, blank=True)
-    status_payment = models.CharField(_('status_payment'), max_length=250, choices=STATUS_PAYMENT, default="pendding")
+    status_payment = models.CharField(_('status_payment'), max_length=250, choices=STATUS_PAYMENT, default="pending")
     payment_method = models.CharField(_('payment_method'), max_length=250, choices=PAYMENT_METHOD, default="ship_code")
-    status_order = models.CharField(max_length=255, choices=STATUS_ORDER, default="create")
+    status_order = models.CharField(max_length=255, choices=STATUS_ORDER, default="pending")
     transaction_id = models.CharField(_('transaction_id'), max_length=250, null=True, blank=True)
     payer_id = models.CharField(_('payer_id'), max_length=250, null=True, blank=True)
     

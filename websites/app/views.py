@@ -36,6 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = UserBases.objects.all().order_by('-date_joined')
     serializer_class = RegiserSerializer
+    parser_classes = (MultiPartParser, JSONParser)
 
 
 class ProductViewSet(viewsets.ModelViewSet):

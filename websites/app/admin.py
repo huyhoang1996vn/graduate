@@ -31,6 +31,7 @@ class StoreAdmin(admin.ModelAdmin):
 admin.site.register(Stores, StoreAdmin)
 
 class ProductAdmin(admin.ModelAdmin):
+    filter_horizontal = ('category',)
     form = ProductForm
     inlines = [ PictureInline, ]
 admin.site.register(Products, ProductAdmin)

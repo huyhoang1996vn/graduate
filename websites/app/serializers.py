@@ -91,6 +91,22 @@ class ProductSerializer(serializers.ModelSerializer):
                 Pictures.objects.create(product=product, image=item)
         return product
 
+    # When update, create and delete image
+    def update(self, instance, validated_data):
+        picture_list = self.context['request'].data.getlist('image', None)
+        list_id_image_delete = self.context['request'].data.getlist('id_images_delete', None)
+        
+        # Create new image
+        if picture_list:
+            for item in picture_list:
+                Pictures.objects.create(product=instance, image=item)
+
+        # Delete image
+        if list_id_image_delete:
+            Pictures.objects.filter(id__in = list_id_image_delete).delete()
+
+        return super(ProductSerializer, self).update(instance, validated_data)
+
 
 class OwnerSerializer(serializers.ModelSerializer):
 

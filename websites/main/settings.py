@@ -173,6 +173,8 @@ AUTH_USER_MODEL = 'app.UserBases'
 LOGIN_URL=reverse_lazy('login')
 # LOGIN_REDIRECT_URL='/api/login'
 
+
+# Detail account in https://developer.paypal.com/developer/accounts/ and find API Credential in profile each account
 credentials ={
     'USER' : 'huyhoang1996ha_api1.gmail.com', # Edit this to your API user name
     'PWD' : 'CURAGKL6V65X779C', # Edit this to your API password

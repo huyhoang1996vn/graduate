@@ -9,5 +9,5 @@ DATABASES = {
     }
 }
 
-cancelUrl = "http://127.0.0.1:8000/api/paypal/confirm"
-returnUrl = "http://127.0.0.1:8000/api/paypal/confirm"
+cancelUrl = "http://52.14.71.211/api/paypal/confirm"
+returnUrl = "http://52.14.71.211/api/paypal/confirm"

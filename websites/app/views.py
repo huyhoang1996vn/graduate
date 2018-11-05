@@ -242,7 +242,7 @@ def change_passqord(request):
 
 
 '''
-Create order for ship code
+Create order for ship code, Money will set in server
 '''
 
 
@@ -250,11 +250,10 @@ Create order for ship code
 def create_order(request):
     try:
         data_product = request.data.pop('product', None)
-        money = request.data.pop('money', None)
         customer = request.user.cus_user_rel if request.user.is_authenticated() else None
 
-        if not data_product or not money:
-            return Response({'message': _('List product and money is required.')}, status=400)
+        if not data_product:
+            return Response({'message': _('List product is required.')}, status=400)
 
         shipSerializer = ShipSerializer(data=request.data)
         if not shipSerializer.is_valid():
@@ -268,27 +267,34 @@ def create_order(request):
         for store_id, list_product in data_product.items():
             try:
                 store = Stores.objects.get(id=store_id)
-                new_order = OrderInfomations(status_payment='pending', payment_method='ship_code', status_order='pending',
-                                             money=money, store=store, customer=customer, order_code=uuid.uuid4())
-                new_order.save()
-
-                for item in list_product:
-                    product = Products.objects.get(id=item['product_id'])
-                    order_detail = OrderDetails(
-                        product=product, orderInfomation=new_order, quantity=item['quantity'])
-                    order_detail.save()
-                    # remove cart when order
-                    if request.user.is_authenticated():
-                        CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
-
-            except Products.DoesNotExist, e:
-                return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
             except Stores.DoesNotExist, e:
                 return Response({"code": 400, "message": "Store not found.", "fields": ""}, status=400)
 
+            new_order = OrderInfomations(status_payment='pending', payment_method='ship_code', status_order='pending',
+                                         money=0, store=store, customer=customer, order_code=uuid.uuid4())
+            amount = 0
+            for item in list_product:
+                try:
+                    product = Products.objects.get(id=item['product_id'])
+                except Products.DoesNotExist, e:
+                    return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
+                
+                amount += product.price * item['quantity']
+
+                if not new_order.pk:
+                    new_order.save()
+                order_detail = OrderDetails(
+                    product=product, orderInfomation=new_order, quantity=item['quantity']).save()
+                # remove cart when order
+                if request.user.is_authenticated():
+                    CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
+            
+            new_order.money = amount
+            new_order.save()
+        
             # Associate shipinfo with order
             shipSerializer.save(order=new_order.id)
-            return Response({'message': _('success')})
+        return Response({'message': _('success')})
 
     except Exception, e:
         print 'Error change_passqord ', e

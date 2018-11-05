@@ -6,7 +6,7 @@ from models import *
 from rest_framework import viewsets
 from serializers import *
 # from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -29,7 +29,7 @@ def home(request):
     #     print "Error: ", e
     #     raise Exception( "ERROR : Internal Server Error .Please contact administrator.")
 
-
+# For getister
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -140,6 +140,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET', 'PUT'])
 @permission_classes((IsAuthenticated, ))
+@parser_classes((MultiPartParser, JSONParser))
 def profile_user(request):
     try:
         if request.method == 'GET':
@@ -562,7 +563,7 @@ class StoreViewSet(viewsets.ModelViewSet):
         owner = self.request.user.owners
         return Stores.objects.filter( owners = owner)
 
-         
+# Only get order by admin
 class OrderAdminViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -582,6 +583,8 @@ class UserBaseViewSet(viewsets.ModelViewSet):
     """
     queryset = UserBases.objects.all()
     serializer_class = UserBaseSerializer
+    parser_classes = (MultiPartParser, JSONParser)
+
 
 
 @api_view(['GET',])

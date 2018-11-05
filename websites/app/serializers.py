@@ -2,7 +2,7 @@ from rest_framework import serializers
 from models import *
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-
+import constant
 
 class RegiserSerializer(serializers.ModelSerializer):
     user_type = (
@@ -293,17 +293,18 @@ class StoreSerializer(serializers.ModelSerializer):
         return store
 
 
-class UserBaseSerializer(serializers.ModelSerializer):
+class UserByAdminSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
-        super(UserBaseSerializer, self).__init__(*args, **kwargs)
+        super(UserByAdminSerializer, self).__init__(*args, **kwargs)
         # Set non required if update
         if args:
             self.fields.get('email', None).required = False
             self.fields.get('password', None).required = False
+            self.fields.get('groupUser', None).required = False
 
     groupUser = serializers.PrimaryKeyRelatedField(
-        many=False, required=True, queryset=GroupUsers.objects.all())
+        many=False, required=True, queryset=GroupUsers.objects.exclude(id=constant.store_id))
     password = serializers.CharField(write_only=True, required=True)
     email = serializers.CharField(required=True)
 
@@ -316,13 +317,27 @@ class UserBaseSerializer(serializers.ModelSerializer):
         if self.instance:
             data.pop('email', None)
             data.pop('password', None)
-        return super(UserBaseSerializer, self).to_internal_value(data)
+            data.pop('groupUser', None)
+        return super(UserByAdminSerializer, self).to_internal_value(data)
 
     def validate_email(self, value):
         email_exist = UserBases.objects.filter(email=value)
         if email_exist:
             raise serializers.ValidationError("Email is exist.")
         return value
+
+    def create(self, validated_data):
+        # Create userBase
+        userBase = UserBases(**validated_data)
+        userBase.set_password(validated_data['password'])
+        userBase.save()
+        # Create customer
+        if userBase.groupUser.id == constant.customer_id:
+            customers = Customers.objects.create(user=userBase)
+        elif userBase.groupUser.id == constant.owner_id:
+            owner = Owners.objects.create(user=userBase)
+
+        return userBase
 
 
 class GroupUserSerializer(serializers.ModelSerializer):

@@ -30,7 +30,7 @@ def home(request):
     #     raise Exception( "ERROR : Internal Server Error .Please contact administrator.")
 
 # For getister
-class UserViewSet(viewsets.ModelViewSet):
+class RegiserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
@@ -577,12 +577,12 @@ class OrderAdminViewSet(viewsets.ModelViewSet):
 
 
 
-class UserBaseViewSet(viewsets.ModelViewSet):
+class UserByAdminViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     queryset = UserBases.objects.all()
-    serializer_class = UserBaseSerializer
+    serializer_class = UserByAdminSerializer
     parser_classes = (MultiPartParser, JSONParser)
 
 

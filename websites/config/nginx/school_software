@@ -1,0 +1,21 @@
+# sudo nano /etc/nginx/sites-available/school_software
+# sudo cp /etc/nginx/sites-available/school_software /etc/nginx/sites-enabled/school_software
+server {
+    listen 80;
+    root /school_software/;
+    gzip            off;
+    location = /favicon.ico { access_log on; log_not_found off; }
+
+    location /static/ {
+       alias /home/ubuntu/school_software/websites/public/static/;
+    }
+
+    location /media/ {
+        alias  /home/ubuntu/school_software/websites/public/media/;
+    }
+
+    location / {
+       include       uwsgi_params;
+       uwsgi_pass    unix:/home/ubuntu/school_software/school_software.sock;
+    }
+}

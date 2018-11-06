@@ -3987,3 +3987,178 @@ spawned uWSGI worker 5 (pid: 1327, cores: 1)
 Not Found: /
 [pid: 1327|app: 0|req: 1/1] 127.0.0.1 () {34 vars in 498 bytes} [Tue Oct  2 12:47:44 2018] HEAD / => generated 2247 bytes in 6939 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
 announcing my loyalty to the Emperor...
+*** Starting uWSGI 2.0.15 (64bit) on [Tue Nov  6 15:06:15 2018] ***
+compiled with version: 5.4.0 20160609 on 08 October 2018 17:27:01
+os: Linux-4.4.0-138-generic #164-Ubuntu SMP Tue Oct 2 17:16:02 UTC 2018
+nodename: huyhoang-GL552JX
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /etc/uwsgi/apps-enabled
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /home/huyhoang/Documents/school_software
+your processes number limit is 23261
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /home/huyhoang/Documents/school_software/school_software.sock fd 3
+Python version: 2.7.12 (default, Dec  4 2017, 14:50:18)  [GCC 5.4.0 20160609]
+Set PythonHome to /home/huyhoang/Documents/project_django_env
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x251e850
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 436560 bytes (426 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x251e850 pid: 23004 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 23004)
+spawned uWSGI worker 1 (pid: 23007, cores: 1)
+spawned uWSGI worker 2 (pid: 23008, cores: 1)
+spawned uWSGI worker 3 (pid: 23009, cores: 1)
+spawned uWSGI worker 4 (pid: 23010, cores: 1)
+spawned uWSGI worker 5 (pid: 23011, cores: 1)
+[pid: 23007|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 865 bytes} [Tue Nov  6 08:06:20 2018] GET /admin/ => generated 11567 bytes in 425 msecs (HTTP/1.1 200) 6 headers in 228 bytes (1 switches on core 0)
+announcing my loyalty to the Emperor...
+SIGINT/SIGQUIT received...killing workers...
+Tue Nov  6 08:13:19 2018 - received message 0 from emperor
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /home/huyhoang/Documents/school_software/school_software.sock removed.
+*** Starting uWSGI 2.0.15 (64bit) on [Tue Nov  6 15:13:22 2018] ***
+compiled with version: 5.4.0 20160609 on 08 October 2018 17:27:01
+os: Linux-4.4.0-138-generic #164-Ubuntu SMP Tue Oct 2 17:16:02 UTC 2018
+nodename: huyhoang-GL552JX
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /etc/uwsgi/apps-enabled
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /home/huyhoang/Documents/school_software
+your processes number limit is 23261
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /home/huyhoang/Documents/school_software/school_software.sock fd 3
+Python version: 2.7.12 (default, Dec  4 2017, 14:50:18)  [GCC 5.4.0 20160609]
+Set PythonHome to /home/huyhoang/Documents/project_django_env
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x242d850
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 436560 bytes (426 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x242d850 pid: 23650 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 23650)
+spawned uWSGI worker 1 (pid: 23652, cores: 1)
+spawned uWSGI worker 2 (pid: 23653, cores: 1)
+spawned uWSGI worker 3 (pid: 23654, cores: 1)
+spawned uWSGI worker 4 (pid: 23655, cores: 1)
+spawned uWSGI worker 5 (pid: 23656, cores: 1)
+[pid: 23652|app: 0|req: 1/1] 127.0.0.1 () {46 vars in 887 bytes} [Tue Nov  6 08:13:40 2018] GET /admin/ => generated 11567 bytes in 351 msecs (HTTP/1.1 200) 6 headers in 228 bytes (1 switches on core 0)
+announcing my loyalty to the Emperor...
+SIGINT/SIGQUIT received...killing workers...
+Tue Nov  6 08:14:16 2018 - received message 0 from emperor
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /home/huyhoang/Documents/school_software/school_software.sock removed.
+*** Starting uWSGI 2.0.15 (64bit) on [Tue Nov  6 15:14:19 2018] ***
+compiled with version: 5.4.0 20160609 on 08 October 2018 17:27:01
+os: Linux-4.4.0-138-generic #164-Ubuntu SMP Tue Oct 2 17:16:02 UTC 2018
+nodename: huyhoang-GL552JX
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /etc/uwsgi/apps-enabled
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /home/huyhoang/Documents/school_software
+your processes number limit is 23261
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /home/huyhoang/Documents/school_software/school_software.sock fd 3
+Python version: 2.7.12 (default, Dec  4 2017, 14:50:18)  [GCC 5.4.0 20160609]
+Set PythonHome to /home/huyhoang/Documents/project_django_env
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x9aa850
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 436560 bytes (426 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x9aa850 pid: 23769 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 23769)
+spawned uWSGI worker 1 (pid: 23772, cores: 1)
+spawned uWSGI worker 2 (pid: 23773, cores: 1)
+spawned uWSGI worker 3 (pid: 23774, cores: 1)
+spawned uWSGI worker 4 (pid: 23775, cores: 1)
+spawned uWSGI worker 5 (pid: 23776, cores: 1)
+[pid: 23774|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 865 bytes} [Tue Nov  6 08:14:25 2018] GET /admin/ => generated 11567 bytes in 310 msecs (HTTP/1.1 200) 6 headers in 228 bytes (1 switches on core 0)
+announcing my loyalty to the Emperor...
+SIGINT/SIGQUIT received...killing workers...
+Tue Nov  6 08:14:36 2018 - received message 0 from emperor
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /home/huyhoang/Documents/school_software/school_software.sock removed.
+*** Starting uWSGI 2.0.15 (64bit) on [Tue Nov  6 15:16:06 2018] ***
+compiled with version: 5.4.0 20160609 on 08 October 2018 17:27:01
+os: Linux-4.4.0-138-generic #164-Ubuntu SMP Tue Oct 2 17:16:02 UTC 2018
+nodename: huyhoang-GL552JX
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /etc/uwsgi/apps-enabled
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /home/huyhoang/Documents/school_software
+your processes number limit is 23261
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /home/huyhoang/Documents/school_software/school_software.sock fd 3
+Python version: 2.7.12 (default, Dec  4 2017, 14:50:18)  [GCC 5.4.0 20160609]
+Set PythonHome to /home/huyhoang/Documents/project_django_env
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x21f2850
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 436560 bytes (426 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x21f2850 pid: 23939 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 23939)
+spawned uWSGI worker 1 (pid: 23942, cores: 1)
+spawned uWSGI worker 2 (pid: 23943, cores: 1)
+spawned uWSGI worker 3 (pid: 23944, cores: 1)
+spawned uWSGI worker 4 (pid: 23945, cores: 1)
+spawned uWSGI worker 5 (pid: 23946, cores: 1)
+[pid: 23942|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 865 bytes} [Tue Nov  6 08:16:07 2018] GET /admin/ => generated 11567 bytes in 324 msecs (HTTP/1.1 200) 6 headers in 228 bytes (1 switches on core 0)
+announcing my loyalty to the Emperor...

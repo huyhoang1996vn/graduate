@@ -33,7 +33,9 @@ urlpatterns = [
     url(r'^order/create/$', views.create_order, name="change-passqord"),
     url(r'^order/list/$', views.list_order, name="change-passqord"),
     url(r'^group/user/$', views.get_group_user, name="get_group_user"),
-    url(r'^order/cancel/$', views.list_order, name="change-passqord"),
+    url(r'^order/cancel/$', views.cancel_order, name="change-passqord"),
+    url(r'^report/admin/$', views.report_admin, name="change-passqord"),
+
 
 
 ]

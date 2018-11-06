@@ -627,3 +627,27 @@ def cancel_order(request):
         return Response(error, status=500)
 
 
+@api_view(['GET',])
+@permission_classes((IsAuthenticated, ))
+def report_admin(request):
+    try:
+        product = Products.objects.count()
+        cus = Customers.objects.count()
+        store = Stores.objects.count()
+        owner = Owners.objects.count()
+        order = OrderInfomations.objects.count()
+        return Response({'product': product, 'customer': cus, 'store': store, 'owner': owner, 'order': order})
+    except Exception, e:
+        print 'profile_user ', e
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
+        return Response(error, status=500)
+
+
+
+
+
+
+
+
+
+

@@ -164,6 +164,7 @@ REST_FRAMEWORK = {
 
 }
 CORS_ORIGIN_ALLOW_ALL = True
+CSRF_COOKIE_NAME = "csrftoken"
 # path to outside file
 OUTSIDE_URL = '/'
 OUTSIDE_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../'))

@@ -223,7 +223,7 @@ def modify_cart(request):
 
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated, ))
-@csrf_exempt
+# @csrf_exempt
 def change_passqord(request):
     try:
 
@@ -471,7 +471,7 @@ def payment(request):
         print 'Result response ', response
 
         if response['status'] == True:
-            status_payment = 'done'
+            status_payment = 'completed'
             transaction_id = response['transaction_id']
             payer_id = response['payerID']
         '''

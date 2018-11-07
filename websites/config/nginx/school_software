@@ -2,6 +2,7 @@
 # sudo cp /etc/nginx/sites-available/school_software /etc/nginx/sites-enabled/school_software
 server {
     listen 80;
+    client_max_body_size 4M;
     root /school_software/;
     gzip            off;
     location = /favicon.ico { access_log on; log_not_found off; }

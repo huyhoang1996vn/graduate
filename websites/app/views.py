@@ -18,6 +18,8 @@ from rest_framework.parsers import MultiPartParser,JSONParser
 from custom_permission import *
 from decorators import check_user_permission
 import traceback
+from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 
 
@@ -221,6 +223,7 @@ def modify_cart(request):
 
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated, ))
+@csrf_exempt
 def change_passqord(request):
     try:
 

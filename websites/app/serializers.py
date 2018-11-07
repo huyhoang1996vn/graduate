@@ -307,6 +307,8 @@ class UserByAdminSerializer(serializers.ModelSerializer):
         many=False, required=True, queryset=GroupUsers.objects.exclude(id=constant.store_id))
     password = serializers.CharField(write_only=True, required=True)
     email = serializers.CharField(required=True)
+    is_superuser = serializers.BooleanField(read_only=True, required=False)
+
 
     class Meta:
         model = UserBases

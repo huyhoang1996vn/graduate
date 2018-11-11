@@ -179,8 +179,8 @@ class Products(DateTimeModel):
     is_active = models.BooleanField(_('active'), default=True)
     status = models.CharField(max_length=255, choices=product_status, default="still")
 
-    def __unicode__(self):
-        return self.name
+    def __str__(self):
+        return "%s" %(self.name)
 
 class CartDetail(DateTimeModel):
     product = models.ForeignKey('Products', on_delete=models.CASCADE)

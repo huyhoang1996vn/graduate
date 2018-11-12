@@ -190,6 +190,7 @@ class Products(DateTimeModel):
     name = models.CharField(_('name'), max_length=250, blank=False, null=False)
     detail = models.CharField(_('detail'), max_length=250, blank=True)
     price = models.IntegerField(_('price'))
+    price_usd = models.FloatField(_('price usd'), null=True, blank=True)
     tax = models.IntegerField(_('tax'), null=True, blank=True)
     hit_count = models.IntegerField(_('hit_count'), null=True, blank=True)
     expire_date = models.DateField()
@@ -279,7 +280,8 @@ class OrderInfomations(DateTimeModel):
     products = models.ManyToManyField(
         Products, through=OrderDetails, related_name='order_product_rel')
     order_code = models.CharField(_('order_code'), max_length=250, blank=True)
-    money = models.CharField(_('money'), max_length=250, null=True, blank=True)
+    money = models.IntegerField(_('money'), max_length=250, null=True, blank=True)
+    money_usd = models.FloatField(_('money usd'), max_length=250, null=True, blank=True)
     status_payment = models.CharField(
         _('status_payment'), max_length=250, choices=STATUS_PAYMENT, default="pending")
     payment_method = models.CharField(

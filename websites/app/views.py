@@ -516,7 +516,7 @@ def list_order(request):
     try:
         customer = request.user.cus_user_rel
         orders = OrderInfomations.objects.filter( customer= customer )
-        serializer = OrderCustomerSerializer(orders, many=True)
+        serializer = OrderCustomerSerializer(orders, many=True, context={'request': request})
         return Response(serializer.data)
 
     except Exception, e:

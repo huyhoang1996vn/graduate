@@ -347,3 +347,23 @@ class GroupUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupUsers
         fields = '__all__'
+
+class ProductOrdertSerializer(serializers.ModelSerializer):
+    picture = PictureSerializer(many=True, read_only=True)
+    expire_date = serializers.DateField(
+        format="%d/%m/%Y", input_formats=["%d/%m/%Y"])
+    stores = StoreSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Products
+        fields = '__all__'
+
+
+class OrderCustomerSerializer(serializers.ModelSerializer):
+    products = ProductOrdertSerializer(many=True)
+
+    class Meta:
+        model = OrderInfomations
+        fields = '__all__'
+
+

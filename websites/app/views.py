@@ -587,6 +587,7 @@ class UserByAdminViewSet(viewsets.ModelViewSet):
     queryset = UserBases.objects.all()
     serializer_class = UserByAdminSerializer
     parser_classes = (MultiPartParser, JSONParser)
+    filter_fields = ('groupUser', )
 
 
 

@@ -7,7 +7,6 @@ import constant
 class RegiserSerializer(serializers.ModelSerializer):
     user_type = (
         ('customer'),
-        ('store'),
         ('owner')
     )
     roll = serializers.ChoiceField(required=True, write_only=True, choices = user_type)

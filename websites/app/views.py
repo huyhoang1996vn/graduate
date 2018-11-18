@@ -305,19 +305,71 @@ def create_order(request):
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
+def vnd_to_usd(money):
+    return round(money/float(24000), 2)
 
+# def usd_to_vnd(money):
+#     return round(money*float(24000))
 
 '''
     Make request paypal to get token
 '''
 
-@api_view(['GET'])
+@api_view(['POST'])
 # @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def redirect_paypal(request):
     try:
-        money = request.query_params.get('money', None)
-        if not money:
-            return Response({'message': _('Money is required.')}, status=400)
+        data_product = request.data.pop('product', None)
+        if not data_product:
+            return Response({'message': _('Product is required.')}, status=400)
+
+        shipSerializer = ShipSerializer(data=request.data)
+        if not shipSerializer.is_valid():
+            return Response(shipSerializer.errors, status=400)
+      
+        customer = request.user.cus_user_rel if request.user.is_authenticated() else None
+        
+        '''
+        Loop dict: key = store_id, value = product object
+        Create order with customer and store
+        Add associattion product with order in orderdetail
+        '''
+        list_order_code = []
+        total_amount_order = 0
+        for store_id, list_product in data_product.items():
+            try:
+                store = Stores.objects.get(id=store_id)
+            except Stores.DoesNotExist, e:
+                return Response({"code": 400, "message": "Store not found.", "fields": ""}, status=400)
+
+            new_order = OrderInfomations(status_payment='pending', payment_method='paypal', status_order='pending',
+                                             money=0, store=store, customer=customer, order_code=uuid.uuid4())
+            list_order_code.append(str(new_order.order_code))
+            for item in list_product:
+                try:
+                    product = Products.objects.get(id=item['product_id'])
+                except Products.DoesNotExist, e:
+                    return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
+                
+                new_order.money += (product.price) * item['quantity']
+
+                if not new_order.pk:
+                    new_order.save()
+                order_detail = OrderDetails(
+                    product=product, orderInfomation=new_order, quantity=item['quantity']).save()
+                # remove cart when order
+                if request.user.is_authenticated():
+                    CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
+            
+            new_order.save()
+            # Associate shipinfo with order
+            shipSerializer.save(order=new_order.id)
+            total_amount_order += new_order.money
+        '''
+        Call handle payment
+        '''
+        print 'total_amount_order ', total_amount_order, vnd_to_usd(total_amount_order)
+        print 'list_order_code ', list_order_code
 
         data = {
             'USER': settings.credentials['USER'],
@@ -326,10 +378,10 @@ def redirect_paypal(request):
             'METHOD': 'SetExpressCheckout',
             'VERSION': 86,
             'PAYMENTREQUEST_0_PAYMENTACTION': 'SALE',
-            'PAYMENTREQUEST_0_AMT': money,           
+            'PAYMENTREQUEST_0_AMT': vnd_to_usd(total_amount_order),           
             'PAYMENTREQUEST_0_CURRENCYCODE': 'USD',
             'cancelUrl': settings.cancelUrl,
-            'returnUrl': settings.returnUrl
+            'returnUrl': settings.returnUrl +'?list_order_code=%s'%(list_order_code)
         }
         PAYPAL_URL = 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkout&token='
         # gets the response and parse it.
@@ -419,7 +471,7 @@ def handle_payment(token, payerID, money):
         print 'Result handle_payment: ', result_paypal
 
         status = result_paypal['ACK']
-        if status.lower() in ('success', 'successwithwarning'):
+        if status.lower() in ('success',):
             response_data['status'] = True
             info_pay = {}
             response_data['money'] = result_paypal['PAYMENTINFO_0_AMT']
@@ -433,12 +485,12 @@ def handle_payment(token, payerID, money):
                 'PAYMENTINFO_0_TRANSACTIONID']
 
             return response_data
+        response_data['message'] = result_paypal['L_LONGMESSAGE0']
         return response_data
 
     except Exception, e:
         print 'Error handle_payment ', e
         return response_data
-
 
 
 '''
@@ -449,59 +501,36 @@ def handle_payment(token, payerID, money):
 # @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def payment(request):
     try:
-        data_product = request.data.pop('product', None)
-        money = request.data.pop('money', None)
+        
         token = request.data.get('token', None)
         payerID = request.data.get('PayerID', None)
+        list_order_code = request.data.get('list_order_code', None)
 
         if not token or not payerID:
             return Response({'message': _('List token and payerID is required.')}, status=400)
-        if not data_product or not money:
-            return Response({'message': _('List product and money is required.')}, status=400)
+        if not list_order_code:
+            return Response({'message': _('list_order_code is required.')}, status=400)
 
-        shipSerializer = ShipSerializer(data=request.data)
-        if not shipSerializer.is_valid():
-            return Response(shipSerializer.errors, status=400)
-        '''
-        Call handle payment
-        '''
-        customer = request.user.cus_user_rel if request.user.is_authenticated() else None
-        status_payment = 'payment_error'
-        response = handle_payment(token, payerID, money)
+        order = OrderInfomations.objects.filter( order_code__in = list_order_code, payer_id__isnull = True)
+        if not order:
+            return Response({'message': _('This order do not access.')}, status=400)
+        money_order = 0 
+        for item in order:
+            money_order += (item.money)
+        print 'order ', order, ' money_order ', money_order
+        response = handle_payment(token, payerID, vnd_to_usd(money_order))
         print 'Result response ', response
 
         if response['status'] == True:
-            status_payment = 'completed'
-            transaction_id = response['transaction_id']
-            payer_id = response['payerID']
-        '''
-        Loop dict: key = store_id, value = product object
-        Create order with customer and store
-        Add associattion product with order in orderdetail
-        '''
-        for store_id, list_product in data_product.items():
-            try:
-                store = Stores.objects.get(id=store_id)
-                new_order = OrderInfomations(status_payment=status_payment, payment_method='paypal', status_order='pending',
-                                             money=money, store=store, customer=customer, order_code=uuid.uuid4(), payer_id=payer_id, transaction_id=transaction_id)
-                new_order.save()
+            money_response = response['money']
+            print 'money_response money_order ', float(money_response) , vnd_to_usd(money_order)
+            if float(money_response) == vnd_to_usd(money_order):
+                order.update(status_payment = 'completed', transaction_id = response['transaction_id'], payer_id = response['payerID'])
+                return Response({'message': _('success')})
 
-                for item in list_product:
-                    product = Products.objects.get(id=item['product_id'])
-                    order_detail = OrderDetails(
-                        product=product, orderInfomation=new_order, quantity=item['quantity'])
-                    order_detail.save()
-                    # remove cart when order
-                    if request.user.is_authenticated() and response['status'] == True:
-                        CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
+        order.update(status_payment = 'payment_error')
+        return Response({'message': "%s" %response['message'] }, status=500)
 
-            except Products.DoesNotExist, e:
-                return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
-            except Stores.DoesNotExist, e:
-                return Response({"code": 400, "message": "Store not found.", "fields": ""}, status=400)
-
-            shipSerializer.save(order=new_order.id)
-            return Response({'message': _('success')})
 
     except Exception, e:
         print 'Error payment ', e

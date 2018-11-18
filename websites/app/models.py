@@ -160,6 +160,7 @@ class Stores(DateTimeModel):
     is_active = models.BooleanField(_('active'), default=True)
     soft_delete = models.DateTimeField(
         _('soft delete'), editable=False, null=True, blank=True)
+    address = models.CharField(_('address'), max_length=250, blank=True, null=True)
     location = models.CharField(_('location'), max_length=250, blank=True, null=True)
 
     def __str__(self):

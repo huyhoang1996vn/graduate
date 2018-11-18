@@ -276,15 +276,18 @@ def create_order(request):
 
             new_order = OrderInfomations(status_payment='pending', payment_method='ship_code', status_order='pending',
                                          money=0, store=store, customer=customer, order_code=uuid.uuid4())
-            amount = 0
             for item in list_product:
                 try:
                     product = Products.objects.get(id=item['product_id'])
                 except Products.DoesNotExist, e:
                     return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
                 
-                amount += product.price * item['quantity']
+                # Check count product
+                if product.count_in_stock < item['quantity']:
+                    return Response({"code": 400, "message": "Count product is not enough.", "fields": ""}, status=400)
 
+                new_order.money += product.price * item['quantity']
+                # Save new order to order detail use, if exist new order then don't save
                 if not new_order.pk:
                     new_order.save()
                 order_detail = OrderDetails(
@@ -293,7 +296,7 @@ def create_order(request):
                 if request.user.is_authenticated():
                     CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
             
-            new_order.money = amount
+            # Save money order
             new_order.save()
         
             # Associate shipinfo with order
@@ -351,8 +354,12 @@ def redirect_paypal(request):
                 except Products.DoesNotExist, e:
                     return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
                 
+                # Check count product
+                if product.count_in_stock < item['quantity']:
+                    return Response({"code": 400, "message": "Count product is not enough.", "fields": ""}, status=400)
+                    
                 new_order.money += (product.price) * item['quantity']
-
+                # Save new order to order detail use, if exist new order then don't save
                 if not new_order.pk:
                     new_order.save()
                 order_detail = OrderDetails(

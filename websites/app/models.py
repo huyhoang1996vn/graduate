@@ -248,6 +248,13 @@ class OrderDetails(DateTimeModel):
 
     def __str__(self):
         return "%s" % (self.orderInfomation)
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            product = self.product
+            product.count_in_stock -= self.quantity
+            product.save()
+        super(OrderDetails, self).save(*args, **kwargs) 
 
 
 @python_2_unicode_compatible

@@ -36,6 +36,10 @@ urlpatterns = [
     url(r'^order/cancel/$', views.cancel_order, name="change-passqord"),
     url(r'^report/admin/$', views.report_admin, name="change-passqord"),
     url(r'^store/info/(?P<id>[0-9]+)/$', views.store_info, name="change-passqord"),
+    url(r'^report/store/$', views.report_store, name="change-passqord"),
+    url(r'^report/owner/$', views.report_owner, name="change-passqord"),
+
+
 
 
 

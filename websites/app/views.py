@@ -19,6 +19,7 @@ from custom_permission import *
 from decorators import check_user_permission
 import traceback
 from django.views.decorators.csrf import csrf_exempt
+import datetime
 
 # Create your views here.
 
@@ -357,7 +358,7 @@ def redirect_paypal(request):
                 # Check count product
                 if product.count_in_stock < item['quantity']:
                     return Response({"code": 400, "message": "Count product is not enough.", "fields": ""}, status=400)
-                    
+
                 new_order.money += (product.price) * item['quantity']
                 # Save new order to order detail use, if exist new order then don't save
                 if not new_order.pk:
@@ -635,7 +636,7 @@ def get_group_user(request):
         groupSerializer = GroupUserSerializer(group, many=True)
         return Response(groupSerializer.data)
     except Exception, e:
-        print 'profile_user ', e
+        print 'get_group_user ', e
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
@@ -662,7 +663,7 @@ def cancel_order(request):
         return Response({'message': 'Only cancel pending order, status current is %s' %order.status_order}, status = 400)
 
     except Exception, e:
-        print 'profile_user ', e
+        print 'cancel_order ', e
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
@@ -678,7 +679,7 @@ def report_admin(request):
         order = OrderInfomations.objects.count()
         return Response({'product': product, 'customer': cus, 'store': store, 'owner': owner, 'order': order})
     except Exception, e:
-        print 'profile_user ', e
+        print 'report_admin ', e
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
@@ -695,13 +696,38 @@ def store_info(request, id):
             "Not found Stores."), "fields": ""}
         return Response(error, status=400)
     except Exception, e:
-        print 'profile_user ', e
+        print 'store_info ', e
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
 
+@api_view(['GET',])
+@permission_classes((IsAuthenticated, ))
+def report_store(request):
+    try:
+        store = request.user.stores
+        product = store.products_set.count()
+        order = store.orderinfomations_set.count()
+        product_unexpired = Products.objects.filter( stores = store, expire_date__gte = datetime.datetime.now()).count()
+        product_expire = Products.objects.filter( stores = store, expire_date__lt = datetime.datetime.now()).count()
+        return Response({'product': product, 'product_unexpired': product_unexpired, 'product_expire': product_expire, 'order': order})
+    except Exception, e:
+        print 'report_store ', e
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
+        return Response(error, status=500)
 
-
-
-
+@api_view(['GET',])
+@permission_classes((IsAuthenticated, ))
+def report_owner(request):
+    try:
+        owner = request.user.owners
+        stores = owner.stores_set.all()
+        count_store = stores.count()
+        product = Products.objects.filter( stores__in = stores ).count()
+        order = OrderInfomations.objects.filter( store__in = stores ).count()
+        return Response({'product': product, 'order': order, 'count_store': count_store})
+    except Exception, e:
+        print 'report_owner ', e
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
+        return Response(error, status=500)
 
 

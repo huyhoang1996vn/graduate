@@ -582,13 +582,13 @@ class FeedbackViewSet(viewsets.ModelViewSet):
 '''
 Show information for STORE, not User
 '''
-class StoreViewSet(viewsets.ModelViewSet):
+class StoreOfOwnerViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     # Fix CustomCheckPermission dont hace attr queryset from doc.
     queryset = Stores.objects.none()
-    serializer_class = StoreSerializer
+    serializer_class = StoreOfOwnerSerializer
     parser_classes = (MultiPartParser, JSONParser)
 
     def get_queryset(self):
@@ -676,7 +676,21 @@ def report_admin(request):
         return Response(error, status=500)
 
 
-
+@api_view(['GET',])
+@permission_classes((AllowAny, ))
+def store_info(request, id):
+    try:
+        store = Stores.objects.get(id = id)
+        serializer = StoreSerializer(instance = store)
+        return Response(serializer.data)
+    except Stores.DoesNotExist:
+        error = {"code": 400, "message": _(
+            "Not found Stores."), "fields": ""}
+        return Response(error, status=400)
+    except Exception, e:
+        print 'profile_user ', e
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
+        return Response(error, status=500)
 
 
 

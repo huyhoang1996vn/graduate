@@ -34,6 +34,7 @@ class ProductAdmin(admin.ModelAdmin):
     filter_horizontal = ('category',)
     form = ProductForm
     inlines = [ PictureInline, ]
+    list_display = ['id', 'name', 'count_in_stock', 'stores', 'price']
 admin.site.register(Products, ProductAdmin)
 
 class OwnerAdmin(admin.ModelAdmin):

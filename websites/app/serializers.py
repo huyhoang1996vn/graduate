@@ -238,7 +238,7 @@ class SupplierSerializer(serializers.ModelSerializer):
 # CRUD store by owner
 
 
-class StoreSerializer(serializers.ModelSerializer):
+class StoreOfOwnerSerializer(serializers.ModelSerializer):
 
     '''
     args is instance update
@@ -246,7 +246,7 @@ class StoreSerializer(serializers.ModelSerializer):
     '''
 
     def __init__(self, *args, **kwargs):
-        super(StoreSerializer, self).__init__(*args, **kwargs)
+        super(StoreOfOwnerSerializer, self).__init__(*args, **kwargs)
         # Set non required if update and delete field user of userBases
         if self.fields.get('user', None):
             del self.fields['user']
@@ -267,7 +267,7 @@ class StoreSerializer(serializers.ModelSerializer):
         if self.instance:
             data.pop('email', None)
             data.pop('password', None)
-        return super(StoreSerializer, self).to_internal_value(data)
+        return super(StoreOfOwnerSerializer, self).to_internal_value(data)
 
     def validate_email(self, value):
         email_exist = UserBases.objects.filter(email=value)
@@ -345,6 +345,12 @@ class GroupUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GroupUsers
+        fields = '__all__'
+
+class StoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Stores
         fields = '__all__'
 
 

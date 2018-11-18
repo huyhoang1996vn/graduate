@@ -13,7 +13,7 @@ router.register(r'category', views.CategoryViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
 router.register(r'supplier', views.SupplierViewSet)
 router.register(r'order/store', views.OrderViewSet)
-router.register(r'store/owner', views.StoreViewSet, base_name='store-list')
+router.register(r'store/owner', views.StoreOfOwnerViewSet, base_name='store-list')
 router.register(r'order/admin', views.OrderAdminViewSet)
 
 
@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'^group/user/$', views.get_group_user, name="get_group_user"),
     url(r'^order/cancel/$', views.cancel_order, name="change-passqord"),
     url(r'^report/admin/$', views.report_admin, name="change-passqord"),
+    url(r'^store/info/(?P<id>[0-9]+)/$', views.store_info, name="change-passqord"),
+
 
 
 

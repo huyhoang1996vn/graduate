@@ -160,6 +160,7 @@ class Stores(DateTimeModel):
     is_active = models.BooleanField(_('active'), default=True)
     soft_delete = models.DateTimeField(
         _('soft delete'), editable=False, null=True, blank=True)
+    location = models.CharField(_('location'), max_length=250, blank=True, null=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -178,11 +179,6 @@ class Pictures(DateTimeModel):
 
 @python_2_unicode_compatible
 class Products(DateTimeModel):
-    product_status = (
-        ('coming_soon', 'Coming soon'),
-        ('still', 'Still'),
-        ('oversell', 'Oversell'),
-    )
     category = models.ManyToManyField(Categories)
     stores = models.ForeignKey(Stores)
     supplier = models.ForeignKey(
@@ -190,13 +186,11 @@ class Products(DateTimeModel):
     name = models.CharField(_('name'), max_length=250, blank=False, null=False)
     detail = models.CharField(_('detail'), max_length=250, blank=True)
     price = models.IntegerField(_('price'))
-    price_usd = models.FloatField(_('price usd'), null=True, blank=True)
     tax = models.IntegerField(_('tax'), null=True, blank=True)
     hit_count = models.IntegerField(_('hit_count'), null=True, blank=True)
     expire_date = models.DateField()
     is_active = models.BooleanField(_('active'), default=True)
-    status = models.CharField(
-        max_length=255, choices=product_status, default="still")
+    count_in_stock = models.IntegerField(_('count in stock'))
 
     def __str__(self):
         return "%s" % (self.name)
@@ -281,7 +275,6 @@ class OrderInfomations(DateTimeModel):
         Products, through=OrderDetails, related_name='order_product_rel')
     order_code = models.CharField(_('order_code'), max_length=250, blank=True)
     money = models.IntegerField(_('money'), max_length=250, null=True, blank=True)
-    money_usd = models.FloatField(_('money usd'), max_length=250, null=True, blank=True)
     status_payment = models.CharField(
         _('status_payment'), max_length=250, choices=STATUS_PAYMENT, default="pending")
     payment_method = models.CharField(

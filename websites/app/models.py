@@ -185,7 +185,7 @@ class Products(DateTimeModel):
     supplier = models.ForeignKey(
         'Suppliers', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(_('name'), max_length=250, blank=False, null=False)
-    detail = models.CharField(_('detail'), max_length=250, blank=True)
+    detail = models.TextField(_('detail'), blank=True)
     price = models.IntegerField(_('price'))
     tax = models.IntegerField(_('tax'), null=True, blank=True)
     hit_count = models.IntegerField(_('hit_count'), null=True, blank=True)

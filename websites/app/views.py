@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from models import *
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from serializers import *
 # from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.decorators import api_view, permission_classes, parser_classes
@@ -42,7 +42,9 @@ class RegiserViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, JSONParser)
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(mixins.RetrieveModelMixin, 
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
@@ -53,26 +55,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_fields = ('category', 'stores')
     search_fields = ('name', )
     ordering_fields = '__all__'
-    # permission_classes = (AllowAny, )
+    permission_classes = (AllowAny, )
     # authentication_classes = ()
-
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        if self.action == 'list' or self.action == 'retrieve':
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
-
-    # Create store by request.user
-    def perform_create(self, serializer):
-        serializer.save( stores = self.request.user.stores )
-
-    # Create store by request.user
-    def perform_update(self, serializer):
-        serializer.save( stores = self.request.user.stores )
 
     def list(self, request):
         item = self.request.query_params.get('item', None)
@@ -731,3 +715,49 @@ def report_owner(request):
         return Response(error, status=500)
 
 
+
+
+class ProductStoreViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    parser_classes = (MultiPartParser, JSONParser)
+    queryset = Products.objects.none()
+    serializer_class = ProductSerializer
+    # filter_backends = (SearchFilter, OrderingFilter)
+    filter_fields = ('category',)
+    search_fields = ('name', )
+    ordering_fields = '__all__'
+    # permission_classes = (AllowAny, )
+    # authentication_classes = ()
+
+    def get_queryset(self):
+        store = self.request.user.stores
+        return store.products_set.all()
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+    # Create store by request.user
+    def perform_create(self, serializer):
+        serializer.save( stores = self.request.user.stores )
+
+    # Create store by request.user
+    def perform_update(self, serializer):
+        serializer.save( stores = self.request.user.stores )
+
+    def list(self, request):
+        item = self.request.query_params.get('item', None)
+        if item:
+            result = Products.objects.all().order_by('created')[:item]
+            productSerializer = ProductSerializer(
+                result, many=True, context={'request': request})
+            return Response(productSerializer.data)
+        return super(ProductStoreViewSet, self).list(request)

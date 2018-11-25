@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 router = routers.DefaultRouter()
 router.register(r'userbase', views.UserByAdminViewSet)
+router.register(r'product/store', views.ProductStoreViewSet)
 router.register(r'product', views.ProductViewSet)
 router.register(r'category', views.CategoryViewSet)
 router.register(r'feedback', views.FeedbackViewSet)

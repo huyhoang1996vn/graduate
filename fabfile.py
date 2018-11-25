@@ -15,7 +15,7 @@ def update_django_project():
     with cd('/home/ubuntu/school_software'):
         run('git pull origin master')
         with prefix('source /home/ubuntu/project_env/bin/activate'):
-        #     run('pip install -r requirement.txt')
+            run('pip install -r websites/requirement.txt')
         #     # run('python manage.py syncdb')
             run('websites/manage.py migrate') # if you use south
         #     run('python manage.py collectstatic --noinput')

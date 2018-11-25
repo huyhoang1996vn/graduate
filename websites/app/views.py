@@ -728,22 +728,18 @@ class ProductStoreViewSet(viewsets.ModelViewSet):
     filter_fields = ('category',)
     search_fields = ('name', )
     ordering_fields = '__all__'
-    # permission_classes = (AllowAny, )
-    # authentication_classes = ()
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         store = self.request.user.stores
         return store.products_set.all()
 
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        if self.action == 'list' or self.action == 'retrieve':
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    # def get_permissions(self):
+    #     if self.action == 'list' or self.action == 'retrieve':
+    #         permission_classes = [AllowAny]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
     # Create store by request.user
     def perform_create(self, serializer):

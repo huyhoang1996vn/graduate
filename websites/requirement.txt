@@ -9,3 +9,4 @@ uWSGI==2.0.17.1
 wsgiref==0.1.2
 django-filter==1.1.0
 requests==2.19.1
+coreapi==2.3.3

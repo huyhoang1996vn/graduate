@@ -538,14 +538,21 @@ def payment(request):
         print 'order ', order, ' money_order ', money_order
         response = handle_payment(token, payerID, vnd_to_usd(money_order))
         print 'Result response ', response
-
+        
         if response['status'] == True:
             money_response = response['money']
             print 'money_response money_order ', float(money_response) , vnd_to_usd(money_order)
             if float(money_response) == vnd_to_usd(money_order):
                 order.update(status_payment = 'completed', transaction_id = response['transaction_id'], payer_id = response['payerID'])
                 return Response({'message': _('success')})
-                
+
+        # Handle return product when cancel or payemnt error
+        for item in order:
+            list_order_detail = item.orderdetails_set.all()
+            for order_detail in list_order_detail:
+                order_detail.product.count_in_stock += order_detail.quantity
+                order_detail.product.save()
+
         order.update(status_payment = 'payment_error')
         return Response({'message': "%s" %response['message'] }, status=500)
 

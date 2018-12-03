@@ -40,6 +40,8 @@ class RegiserViewSet(viewsets.ModelViewSet):
     queryset = UserBases.objects.all().order_by('-date_joined')
     serializer_class = RegiserSerializer
     parser_classes = (MultiPartParser, JSONParser)
+    permission_classes = (AllowAny, )
+
 
 
 class ProductViewSet(mixins.RetrieveModelMixin, 
@@ -149,10 +151,11 @@ def profile_user(request):
 
 
 @api_view(['GET', ])
-@permission_classes((IsAuthenticated, ))
+@check_user_permission(['add_carts', 'change_carts', 'delete_carts'])
 def view_cart(request):
     try:
         user = request.user
+        print 'haong'
         cart = Carts.objects.get(cus_cart_rel=user.cus_user_rel)
         cart_detail = CartDetail.objects.filter(cart=cart)
         serializer = CartDetailSerializer(
@@ -165,8 +168,7 @@ def view_cart(request):
 
 
 @api_view(['POST', ])
-@permission_classes((IsAuthenticated, ))
-# @check_user_permission(['add_carts', 'change_carts'])
+@check_user_permission(['add_carts', 'change_carts', 'delete_carts'])
 def modify_cart(request):
     try:
         addCartSerializer = AddCartSerializer(data=request.data)
@@ -236,6 +238,7 @@ Create order for ship code, Money will set in server
 
 
 @api_view(['POST'])
+@check_user_permission(['change_orderinfomations', 'add_orderinfomations', 'delete_orderinfomations'])
 def create_order(request):
     try:
         data_product = request.data.pop('product', None)
@@ -304,7 +307,7 @@ def vnd_to_usd(money):
 '''
 
 @api_view(['POST'])
-# @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
+@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def redirect_paypal(request):
     try:
         data_product = request.data.pop('product', None)
@@ -397,7 +400,7 @@ def redirect_paypal(request):
 '''
 
 @api_view(['GET'])
-# @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
+@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def payment_confirm(request):
     try:
         token = request.query_params.get('token', None)
@@ -490,7 +493,7 @@ def handle_payment(token, payerID, money):
 '''
 
 @api_view(['POST'])
-# @check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
+@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def payment(request):
     try:
         
@@ -532,7 +535,7 @@ def payment(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def list_order(request):
     try:
         customer = request.user.cus_user_rel
@@ -628,7 +631,7 @@ def get_group_user(request):
 
 
 @api_view(['PUT',])
-@permission_classes((IsAuthenticated, ))
+@check_user_permission(['delete_orderinfomations',])
 def cancel_order(request):
     try:
         order_code = request.data.get('order_code', None)
@@ -698,6 +701,7 @@ def report_store(request):
         print 'report_store ', e
         error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
         return Response(error, status=500)
+
 
 @api_view(['GET',])
 @permission_classes((IsAuthenticated, ))

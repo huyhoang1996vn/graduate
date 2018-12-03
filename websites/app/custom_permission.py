@@ -15,7 +15,7 @@ class CustomCheckPermission(permissions.BasePermission):
     }
 
     def has_permission(self, request, view):
-        print "***** check has_object_permissions ****", view.queryset
+        print "***** check permissions class  ****"
 
         #  View is funtion, check permission in decoratoe
         if not hasattr(view, 'queryset'):
@@ -34,7 +34,7 @@ class CustomCheckPermission(permissions.BasePermission):
 
         codename = self.perms_map[request.method] % kwargs
         group = request.user.groupUser
-        print 'codename: %s, group: %s' % (codename, group)
+        print 'codename: %s, group: %s, user %s' % (codename, group, request.user)
         
         is_allow = GroupUserPermissions.objects.filter(
             codename=codename, groupUser=group)

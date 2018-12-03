@@ -297,7 +297,15 @@ class OrderInfomations(DateTimeModel):
     def __str__(self):
         return "%s" % (self.customer)
 
-    
+    # Handle return product when cancel or payemnt error
+    def save(self, *args, **kwargs):
+        if self.pk:
+            if self.payment_method == 'payment_error':
+                list_order = self.orderdetails_set.all()
+                for item in list_order:
+                    item.product.count_in_stock += item.quantity
+                    item.product.save()
+        super(OrderInfomations, self).save(*args, **kwargs) 
 
 @python_2_unicode_compatible
 class Feedbacks(DateTimeModel):

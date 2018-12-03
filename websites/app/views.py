@@ -238,7 +238,6 @@ Create order for ship code, Money will set in server
 
 
 @api_view(['POST'])
-@check_user_permission(['change_orderinfomations', 'add_orderinfomations', 'delete_orderinfomations'])
 def create_order(request):
     try:
         data_product = request.data.pop('product', None)
@@ -307,7 +306,6 @@ def vnd_to_usd(money):
 '''
 
 @api_view(['POST'])
-@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def redirect_paypal(request):
     try:
         data_product = request.data.pop('product', None)
@@ -400,7 +398,6 @@ def redirect_paypal(request):
 '''
 
 @api_view(['GET'])
-@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def payment_confirm(request):
     try:
         token = request.query_params.get('token', None)
@@ -493,7 +490,6 @@ def handle_payment(token, payerID, money):
 '''
 
 @api_view(['POST'])
-@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
 def payment(request):
     try:
         
@@ -522,7 +518,7 @@ def payment(request):
             if float(money_response) == vnd_to_usd(money_order):
                 order.update(status_payment = 'completed', transaction_id = response['transaction_id'], payer_id = response['payerID'])
                 return Response({'message': _('success')})
-
+                
         order.update(status_payment = 'payment_error')
         return Response({'message': "%s" %response['message'] }, status=500)
 

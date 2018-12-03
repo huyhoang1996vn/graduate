@@ -245,6 +245,20 @@ def create_order(request):
 
         if not data_product:
             return Response({'message': _('List product is required.')}, status=400)
+        # TODO
+        list_product_not_enough = []
+        for store_id, list_product in data_product.items():
+            for item in list_product:
+                try:
+                    product = Products.objects.get(id=item['product_id'])
+                except Products.DoesNotExist, e:
+                    return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
+                if product.count_in_stock < item['quantity']:
+                    list_product_not_enough.append(product.id)
+
+        if list_product_not_enough:
+            return Response({"code": 400, "message": "Count product is not enough.", "fields": list_product_not_enough}, status=400)
+
 
         shipSerializer = ShipSerializer(data=request.data)
         if not shipSerializer.is_valid():
@@ -311,6 +325,19 @@ def redirect_paypal(request):
         data_product = request.data.pop('product', None)
         if not data_product:
             return Response({'message': _('Product is required.')}, status=400)
+        #  TODO
+        list_product_not_enough = []
+        for store_id, list_product in data_product.items():
+            for item in list_product:
+                try:
+                    product = Products.objects.get(id=item['product_id'])
+                except Products.DoesNotExist, e:
+                    return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
+                if product.count_in_stock < item['quantity']:
+                    list_product_not_enough.append(product.id)
+                    
+        if list_product_not_enough:
+            return Response({"code": 400, "message": "Count product is not enough.", "fields": list_product_not_enough}, status=400)
 
         shipSerializer = ShipSerializer(data=request.data)
         if not shipSerializer.is_valid():

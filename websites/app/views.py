@@ -57,7 +57,7 @@ class ProductViewSet(mixins.RetrieveModelMixin,
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = DetailProductSerializer(instance)
+        serializer = DetailProductSerializer(instance, context={'request': request})
         return Response(serializer.data)
 
 
@@ -83,7 +83,6 @@ class SupplierViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = OrderInfomations.objects.none()
     serializer_class = OrderOfStoreSerializer
-    permission_classes = (IsAuthenticated, )
     filter_fields = ('status_order',)
     
     def get_queryset(self):
@@ -713,7 +712,6 @@ class ProductStoreViewSet(viewsets.ModelViewSet):
     filter_fields = ('category',)
     search_fields = ('name', )
     ordering_fields = '__all__'
-    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         store = self.request.user.stores

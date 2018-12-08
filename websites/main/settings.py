@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'app',
+    'interact',
+    'push_notifications',
+    'django_cron',
+    
 ]
 
 SITE_ID = 1
@@ -182,6 +186,39 @@ credentials ={
     'SIGNATURE' : 'A6Se6BKM-0-Ibix7u0SeowrpNEY7A.1oJIvSsDWL9bWeQB6B1FNSyIwA', 
     # 'SUBJECT': credentials['FACILITATOR_EMAIL'],
 }
-
-
+CRON_CLASSES = [
+    "app.handle_cronjob.MyCronJob",
+]
+print 'BASE_DIR ', BASE_DIR
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "WP_PRIVATE_KEY": os.path.abspath(os.path.join(BASE_DIR, '../file_pem/private_key.pem')),
+    "WP_CLAIMS": {'sub': "mailto: huyhoang1996ha@gmail.com"}
+}
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
+        },
+    },
+    'handlers': {
+        'default': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': 'msg.log',
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 5,
+            'formatter':'simple',
+        },
+    },
+    'loggers': {
+        'django_cron': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}
+  
 from config.setting_local import *

@@ -20,7 +20,6 @@ router.register(r'order/admin', views.OrderAdminViewSet)
 
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
     url(r'^', include(router.urls)),
     url(r'^register/$', views.RegiserViewSet.as_view({'post': 'create'})),
     url(r'^profile/$', views.profile_user),

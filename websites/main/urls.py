@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^schema/$', schema_view),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('app.urls')),
+    url(r'^interact/', include('interact.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^docs/', include_docs_urls(title='API Documente'))
 

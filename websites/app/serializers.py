@@ -363,3 +363,12 @@ class OrderCustomerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DetailProductSerializer(serializers.ModelSerializer):
+    picture = PictureSerializer(many=True, read_only=True)
+    expire_date = serializers.DateField(
+        format="%d/%m/%Y", input_formats=["%d/%m/%Y"])
+    stores = StoreSerializer(read_only=True, many=False)
+
+    class Meta:
+        model = Products
+        fields = '__all__'

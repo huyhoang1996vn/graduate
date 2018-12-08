@@ -282,7 +282,7 @@ class OrderInfomations(DateTimeModel):
     products = models.ManyToManyField(
         Products, through=OrderDetails, related_name='order_product_rel')
     order_code = models.CharField(_('order_code'), max_length=250, blank=True)
-    money = models.IntegerField(_('money'), max_length=250, null=True, blank=True)
+    money = models.IntegerField(_('money'), null=True, blank=True)
     status_payment = models.CharField(
         _('status_payment'), max_length=250, choices=STATUS_PAYMENT, default="pending")
     payment_method = models.CharField(

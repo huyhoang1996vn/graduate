@@ -10,3 +10,5 @@ wsgiref==0.1.2
 django-filter==1.1.0
 requests==2.19.1
 coreapi==2.3.3
+django-push-notifications
+django_cron

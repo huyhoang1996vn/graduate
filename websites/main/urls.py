@@ -37,4 +37,4 @@ urlpatterns = [
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns += urlpatterns + static(settings.OUTSIDE_URL, document_root=settings.OUTSIDE_ROOT)
+# urlpatterns += urlpatterns + static(settings.OUTSIDE_URL, document_root=settings.OUTSIDE_ROOT)

@@ -210,7 +210,7 @@ class CartDetail(DateTimeModel):
 @python_2_unicode_compatible
 class Carts(DateTimeModel):
     products = models.ManyToManyField(
-        Products, through=CartDetail, related_name='cart_product_rel', null=True, blank=True)
+        Products, through=CartDetail, related_name='cart_product_rel', blank=True)
     product_code = models.CharField(
         _("Product code"), max_length=255, null=True, blank=True)
 
@@ -295,7 +295,7 @@ class OrderInfomations(DateTimeModel):
         _('payer_id'), max_length=250, null=True, blank=True)
 
     def __str__(self):
-        return "%s" % (self.customer)
+        return "%s" % (self.id)
 
     # Handle return product when cancel or payemnt error
     def save(self, *args, **kwargs):

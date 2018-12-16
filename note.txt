@@ -11,3 +11,6 @@ Authorization: WebPush eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczov
 
 Application Server Key = BM56fBK9Ro-QXCI9rnsohmT-yb-Sco6s1BeAgkVX63WmEdNfP2szc1oXdAbTZffrEsJZ6L_rEIAxzOPu22ik9PI
 
+tail -f /var/log/cron.log
+service cron status
+* * * * * /home/huyhoang/Documents/school_software/websites/cronjob.sh >> /home/huyhoang/Documents/school_software/msg.log 2>&1

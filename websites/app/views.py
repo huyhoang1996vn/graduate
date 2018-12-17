@@ -513,13 +513,6 @@ def payment(request):
                 order.update(status_payment = 'completed', transaction_id = response['transaction_id'], payer_id = response['payerID'])
                 return Response({'message': _('success')})
 
-        # Handle return product when cancel or payemnt error
-        for item in order:
-            list_order_detail = item.orderdetails_set.all()
-            for order_detail in list_order_detail:
-                order_detail.product.count_in_stock += order_detail.quantity
-                order_detail.product.save()
-
         order.update(status_payment = 'payment_error')
         return Response({'message': "%s" %response['message'] }, status=500)
 

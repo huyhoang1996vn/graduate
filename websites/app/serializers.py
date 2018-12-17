@@ -23,8 +23,6 @@ class RegiserSerializer(serializers.ModelSerializer):
     '''
 
     def create(self, validated_data):
-        # validated_data = OrderedDict((k, v) for k, v in validated_data.items()  if v not in [None, [], '', {}])
-
         roll = validated_data.get('roll', None)
         if roll:
             del validated_data['roll']
@@ -201,12 +199,6 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
         if self.instance:
             data.pop('store', None)
         return super(OrderOfStoreSerializer, self).to_internal_value(data)
-
-    # def save(self):
-    #     order = super(OrderOfStoreSerializer, self).save()
-    #     order.store = self.context['request'].user.stores
-    #     order.save()
-    #     return order
 
 
 class OrderSerializer(serializers.ModelSerializer):

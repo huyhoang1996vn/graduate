@@ -41,10 +41,14 @@ class UserManager(BaseUserManager):
 
 @python_2_unicode_compatible
 class GroupUsers(models.Model):
+    CUSTOMER = 'customer'
+    STORE = 'store'
+    OWNER = 'owner'
+
     group_type = (
-        ('customer', 'customer'),
-        ('store', 'store'),
-        ('owner', 'owner'),
+        (CUSTOMER, 'customer'),
+        (STORE, 'store'),
+        (OWNER, 'owner'),
     )
     name = models.CharField(_('name'), choices=group_type,
                             default="customer_group", max_length=250, unique=True)
@@ -297,15 +301,6 @@ class OrderInfomations(DateTimeModel):
     def __str__(self):
         return "%s" % (self.id)
 
-    # Handle return product when cancel or payemnt error
-    def save(self, *args, **kwargs):
-        if self.pk:
-            if self.payment_method == 'payment_error':
-                list_order = self.orderdetails_set.all()
-                for item in list_order:
-                    item.product.count_in_stock += item.quantity
-                    item.product.save()
-        super(OrderInfomations, self).save(*args, **kwargs) 
 
 @python_2_unicode_compatible
 class Feedbacks(DateTimeModel):

@@ -60,7 +60,9 @@ def send_notification(request):
         print 'connect_notification ', e
         return Response({"code": 500, "message": _("Lỗi hệ thống"), "fields": ""}, status=500)
 
-
+def index(request):
+    print "***START push_notification PAGE***"
+    return render(request, 'websites/index.html')
 
 
     

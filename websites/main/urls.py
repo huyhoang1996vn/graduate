@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
-
+from interact import views as view_interact
 # from rest_framework_swagger.views import get_swagger_view
 # schema_view2 = get_swagger_view(title='Swagger API')
 
@@ -31,7 +31,9 @@ urlpatterns = [
     url(r'^api/', include('app.urls')),
     url(r'^interact/', include('interact.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'^docs/', include_docs_urls(title='API Documente'))
+    url(r'^docs/', include_docs_urls(title='API Documente')),
+    url(r'^.*$', view_interact.index),
+
 
     # url(r'^docs2/$', schema_view2),
 

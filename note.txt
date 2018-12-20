@@ -14,3 +14,5 @@ Application Server Key = BM56fBK9Ro-QXCI9rnsohmT-yb-Sco6s1BeAgkVX63WmEdNfP2szc1o
 tail -f /var/log/cron.log
 service cron status
 * * * * * /home/huyhoang/Documents/school_software/websites/cronjob.sh >> /home/huyhoang/Documents/school_software/msg.log 2>&1
+* * * * * /home/ubuntu/school_software/websites/cronjob.sh >> /home/ubuntu/school_software/msg.log 2>&1
+* * * * * /home/huyhoang/Documents/school_software/websites/cronjob.sh >> /home/huyhoang/Documents/school_software/msg.log 2>&1

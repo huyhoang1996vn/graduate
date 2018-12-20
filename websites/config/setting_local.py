@@ -9,5 +9,8 @@ DATABASES = {
     }
 }
 
+# cancelUrl = "http://52.14.71.211/api/paypal/confirm"
+# returnUrl = "http://localhost:3000/checkout-confirm"
+
 cancelUrl = "http://52.14.71.211/api/paypal/confirm"
-returnUrl = "http://localhost:3000/checkout-confirm"
+returnUrl = "http://52.14.71.211/checkout-confirm"

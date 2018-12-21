@@ -355,7 +355,6 @@ class StoreSerializer(serializers.ModelSerializer):
         model = Stores
         fields = '__all__'
 
-
 class OrderCustomerSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True)
     store = StoreSerializer(many=False, read_only=True)
@@ -374,3 +373,20 @@ class DetailProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
         fields = '__all__'
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderInfomations
+        fields = '__all__'
+
+class OrderCustomerSerializer2(serializers.ModelSerializer):
+    product = DetailProductSerializer(many=False)
+    orderInfomation = OrderDetailSerializer(many=False)
+
+    class Meta:
+        model = OrderDetails
+        fields = '__all__'
+
+

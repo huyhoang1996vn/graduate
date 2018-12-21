@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^store/info/(?P<id>[0-9]+)/$', views.store_info, name="change-passqord"),
     url(r'^report/store/$', views.report_store, name="change-passqord"),
     url(r'^report/owner/$', views.report_owner, name="change-passqord"),
+    url(r'^order/list/v2/$', views.list_order_2, name="change-passqord"),
 
 
 

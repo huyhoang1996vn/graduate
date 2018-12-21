@@ -210,10 +210,20 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class FeedbackSerializer(serializers.ModelSerializer):
     customer = serializers.CharField(required=False)
+    avatar = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Feedbacks
         fields = '__all__'
+  
+    def get_avatar(self, obj):
+        cus = obj.customer
+        avatar = cus.user.avatar
+        if avatar:
+            request = self.context.get('request')
+            return request.build_absolute_uri(avatar.url)
+        return None
 
 
 '''

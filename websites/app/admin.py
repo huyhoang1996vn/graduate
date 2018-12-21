@@ -53,7 +53,7 @@ class CustomUserAdmin(UserAdmin):
     form = UserBaseForm
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'avatar')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groupUser',)}),
         # (_('Important dates'), {'fields': ('last_login',)}),
@@ -112,3 +112,8 @@ admin.site.register(GroupUserPermissions, GroupUserPermissionAdmin)
 class GroupUserAdmin(admin.ModelAdmin):
     pass
 admin.site.register(GroupUsers, GroupUserAdmin)
+
+
+class FeedbacksAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Feedbacks, FeedbacksAdmin)

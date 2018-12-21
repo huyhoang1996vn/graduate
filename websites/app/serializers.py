@@ -379,7 +379,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderInfomations
-        fields = '__all__'
+        exclude = ('products', )
 
 class OrderCustomerSerializer2(serializers.ModelSerializer):
     product = DetailProductSerializer(many=False)

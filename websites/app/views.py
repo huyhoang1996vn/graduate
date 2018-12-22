@@ -540,6 +540,23 @@ def list_order(request):
 
 
 
+@api_view(['GET'])
+@check_user_permission(['add_orderinfomations', 'change_orderinfomations','delete_orderinfomations'])
+def list_order_2(request):
+    try:
+        customer = request.user.cus_user_rel
+        orders = OrderInfomations.objects.filter( customer= customer )
+        order_detail = OrderDetails.objects.filter( orderInfomation__in = orders )
+        serializer = OrderCustomerSerializer2(order_detail, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    except Exception, e:
+        print 'Error payment ', e
+        error = {"code": 500, "message": "%s" %traceback.format_exc(), "fields": ""}
+        return Response(error, status=500)
+
+
+
 class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedbacks.objects.all()
     serializer_class = FeedbackSerializer

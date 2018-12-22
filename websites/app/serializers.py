@@ -210,10 +210,20 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class FeedbackSerializer(serializers.ModelSerializer):
     customer = serializers.CharField(required=False)
+    avatar = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Feedbacks
         fields = '__all__'
+  
+    def get_avatar(self, obj):
+        cus = obj.customer
+        avatar = cus.user.avatar
+        if avatar:
+            request = self.context.get('request')
+            return request.build_absolute_uri(avatar.url)
+        return None
 
 
 '''
@@ -345,7 +355,6 @@ class StoreSerializer(serializers.ModelSerializer):
         model = Stores
         fields = '__all__'
 
-
 class OrderCustomerSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True)
     store = StoreSerializer(many=False, read_only=True)
@@ -364,3 +373,20 @@ class DetailProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
         fields = '__all__'
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderInfomations
+        exclude = ('products', )
+
+class OrderCustomerSerializer2(serializers.ModelSerializer):
+    product = DetailProductSerializer(many=False)
+    orderInfomation = OrderDetailSerializer(many=False)
+
+    class Meta:
+        model = OrderDetails
+        fields = '__all__'
+
+

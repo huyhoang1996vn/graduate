@@ -43,8 +43,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'app',
-    'interact',
-    'push_notifications',
     'django_cron',
     
 ]

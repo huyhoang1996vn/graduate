@@ -1,0 +1,9 @@
+.noti-image button{
+    margin-top: 5px;
+}
+form label{
+    margin-top: 8px;
+}
+form select.form-control{
+    width: 40%;
+}

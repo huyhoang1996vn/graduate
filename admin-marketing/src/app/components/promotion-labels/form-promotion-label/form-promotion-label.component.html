@@ -1,0 +1,40 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/promotion-label/list">Nhãn Khuyến Mãi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{title_page}}</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row mt-30 mb-30 text-center">
+    <div class="col-xs-12 col-md-12">
+        <p class="title">{{title_page}}</p>
+        <hr/>
+    </div>
+</div>
+<ng-container *ngIf="errorMessage">
+    <h4 *ngFor="let error of errorMessage | mapToIterable" class="error_msg">
+        {{error.val}}
+    </h4>
+</ng-container>
+<form [formGroup]="formPromotionLabel" novalidate *ngIf="promotion_label">
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Tên</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="name"/>
+            <show-error-valid [control]="formPromotionLabel.get('name')"></show-error-valid>
+        </div>
+    </div>
+    <hr/>
+    <button class="btn btn-danger" (click)="deletePromotionLabelEvent()" *ngIf="promotion_label.id">
+        XÓA
+    </button>
+    <button class="btn btn-primary pull-right" (click)="onSubmit()">
+        LƯU LẠI
+    </button>
+</form>

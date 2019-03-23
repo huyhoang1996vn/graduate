@@ -1,0 +1,198 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/event/list">Sự Kiện</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{title_page}}</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row mt-30 mb-30">
+    <div class="col-xs-12 col-md-12">
+        <p class="title text-center">{{title_page}}</p>
+        <hr>
+    </div>
+</div>
+<ng-container *ngIf="errorMessage">
+    <h4 *ngFor="let error of errorMessage | mapToIterable" class="error_msg">
+        {{error.val}}
+    </h4>
+</ng-container>
+<form [formGroup]="formEvent" novalidate *ngIf="event">
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Tên</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="name"/>
+            <show-error-valid [control]="formEvent.get('name')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row event-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Hình Ảnh</label>
+        </div>
+        <div class="col-sm-8">
+            <p *ngIf="event.image">
+                <span>Hiện tại: <a href="{{api_domain}}{{event.image}}" target="_blank">{{event.image}}</a></span>
+            </p>
+            <p *ngIf="event.image" class="clear_image">
+                <input type="checkbox" formControlName="is_clear_image"/> Xóa
+            </p>
+            <p *ngIf="msg_clear_image" class="error_msg">{{msg_clear_image}}</p>
+            <input type="file" accept="image/*"
+            (change)="onFileChange($event)" />
+            <ul class="error_valid" 
+                *ngIf="formEvent.get('image') && formEvent.get('image')?.errors">
+                <li style="color: red" *ngIf="formEvent.get('image').errors?.fomatFile">
+                    Vui lòng tải tệp lên với các định dạng này (jpg, jpeg, png, ico, bmp)
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-group row event-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Thumbnail Cho App</label>
+        </div>
+        <div class="col-sm-8">
+            <p *ngIf="event.image_thumbnail">
+                <span>Hiện tại: <a href="{{api_domain}}{{event.image_thumbnail}}" target="_blank">{{event.image_thumbnail}}</a></span>
+            </p>
+            <p *ngIf="event.image_thumbnail" class="clear_image">
+                <input type="checkbox" formControlName="is_clear_image_thumbnail"/> Xóa
+            </p>
+            <p *ngIf="msg_clear_thumbnail" class="error_msg">{{msg_clear_thumbnail}}</p>
+            <input type="file" accept="image/*"
+            (change)="onFileChangeThumbnail($event)" />
+            <ul class="error_valid" 
+                *ngIf="formEvent.get('image_thumbnail') && formEvent.get('image_thumbnail')?.errors">
+                <li style="color: red" *ngIf="formEvent.get('image_thumbnail').errors?.fomatFile">
+                    Vui lòng tải tệp lên với các định dạng này (jpg, jpeg, png, ico, bmp)
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Mô Tả</label>
+        </div>
+        <div class="col-sm-8">
+            <textarea rows="3" class="form-control" formControlName="short_description" (keyup)="checkIsNewline($event.target.value)"></textarea>
+            <show-error-valid [control]="formEvent.get('short_description')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Nội Dung</label>
+        </div>
+        <div class="col-sm-8">
+            <ckeditor formControlName="content" [config]="ckEditorConfig"></ckeditor>
+            <show-error-valid [control]="formEvent.get('content')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Ngày Bắt Đầu</label>
+        </div>
+        <div class="col-sm-6 input-group">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dt1">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="start_date"
+                [owlDateTime]="dt1" id="start_date"
+            />         
+            <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="formEvent.get('start_date')"></show-error-valid>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Ngày Kết Thúc</label>
+        </div>
+        <div class="col-sm-6 input-group">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dt2">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="end_date"
+                [owlDateTime]="dt2" id="end_date"
+            />         
+            <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="formEvent.get('end_date')"></show-error-valid>
+            <ul *ngIf="!formEvent.get('end_date').errors?.required_date && 
+                !formEvent.get('start_date').errors?.required_date &&
+                !formEvent.get('end_date').errors?.fomatDate && !formEvent.get('start_date').errors?.fomatDate">
+                <li style="color: red">
+                    {{ formEvent.errors?.dates ? 'Vui lòng nhập ngày kết thúc lớn hơn hoặc bằng ngày bắt đầu': '' }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Thời Gian Bắt Đầu</label>
+        </div>
+        <div class="col-sm-6 input-group">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dt3">
+                <i class="fa fa-clock-o"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="start_time"
+                [owlDateTime]="dt3" id="start_time"
+            />         
+            <owl-date-time [pickerType]="'timer'" #dt3></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="formEvent.get('start_time')"></show-error-valid>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Thời Gian Kết Thúc</label>
+        </div>
+        <div class="col-sm-6 input-group">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dt4">
+                <i class="fa fa-clock-o"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="end_time"
+                [owlDateTime]="dt4" id="end_time"
+            />         
+            <owl-date-time [pickerType]="'timer'" #dt4></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="formEvent.get('end_time')"></show-error-valid>
+            <ul *ngIf="!formEvent.get('end_time').errors?.fomatDate && 
+                !formEvent.get('start_time').errors?.fomatDate && !formEvent.get('end_time').errors?.required_time && 
+                !formEvent.get('start_time').errors?.required_time">
+                <li style="color: red">
+                    {{ formEvent.errors?.times ? 'Vui lòng nhập thời gian kết thúc lớn hơn thời gian bắt đầu': '' }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Is Draft</label>
+        </div>
+        <div class="col-sm-6">
+            <input type="checkbox" formControlName="is_draft"/>
+        </div>
+    </div>
+
+    <hr/>
+    <button class="btn btn-danger" (click)="deleteEvent()" *ngIf="event.id">
+        XÓA
+    </button>
+    <button class="btn btn-primary pull-right" (click)="onSubmit()">
+        LƯU LẠI
+    </button>
+</form>

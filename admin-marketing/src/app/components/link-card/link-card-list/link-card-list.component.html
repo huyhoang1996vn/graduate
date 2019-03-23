@@ -1,0 +1,65 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Thẻ Liên Kết</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">Thẻ Liên Kết</p>
+</div>
+<div *ngIf="link_cards">
+    <div class='row custom-title'>
+        <a class=" pull-right" routerLink="/link-card/add">
+            <div class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span>
+                Thêm Thẻ Liên Kết
+            </div>
+        </a>
+    </div>
+    <table datatable class="row-border hover" id="table_id" dt-instance="dtInstanceCallback" [dtOptions]='dtOptions'>
+        <thead>
+            <tr>
+                <th><input type="checkbox" name="select_all" id="select-all" (change)="selectAllEvent($event);"/></th>
+                <th><span>ID</span></th>
+                <th><span>Card Barcode</span></th>
+                <th><span>Email</span></th>
+                <th><span>Họ Và Tên</span> </th>
+                <th><span>Số Điện Thoại</span></th>
+                <th><span>Ngày Sinh</span></th>
+                <th><span>Ngày Mapping</span></th>
+                <th><span>Tài Khoản Thực Hiện Mapping</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="row-data" *ngFor="let link_card of link_cards">
+                <td><input type="checkbox" (change)="selectCheckbox($event);"/></td>
+                <td>{{ link_card.id }}</td>
+                <td>{{ link_card.barcode }}</td>
+                <td><a [routerLink]="['../link-card/detail/', link_card.id, { email: link_card.email, barcode: link_card.barcode }]">
+                    {{ link_card.email }}</a>
+                </td>
+                <td>{{ link_card.full_name }}</td>
+                <td>{{ link_card.phone }}</td>
+                <td> <span class="hidden">{{ convertToDate(link_card.birth_date)}}</span>{{ link_card.birth_date}}</td>
+                <td><span class="hidden">{{ link_card.date_mapping | date:"yyyyMMdd HHmm" }}</span>{{ link_card.date_mapping | date:"dd/MM/yyyy HH:mm" }}</td>
+                <td>{{ link_card.username_mapping }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class='row area-link-card-footer'>
+    	<div class="col-md-3">
+    		<select name="" class="form-control">
+    			<option value="">Xóa các thẻ liên kết được chọn</option>
+    		</select>
+    	</div>
+    	<div class="col-md-3">
+    		{{length_selected}} của {{length_all}} được chọn
+    		<button (click)="confirmDelete()" type="button" class="btn-link-card btn btn-danger">Thực hiện</button>
+    	</div>
+    </div>
+</div>

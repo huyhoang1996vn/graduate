@@ -1,0 +1,13 @@
+<div id="UpdatePromotion" class="modal fade" role="dialog">
+    <div class="modal-dialog custom-popup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chỉnh Sửa Khuyến Mãi</h4>
+            </div>
+            <div class="modal-body">
+                <app-promotion-form-detail [position]="position" (update_promotion)='updatePromotion($event)'></app-promotion-form-detail>
+            </div>
+        </div>
+    </div>
+</div>

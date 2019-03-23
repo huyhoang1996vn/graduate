@@ -1,0 +1,55 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Banner</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">Banner</p>
+</div>
+<div *ngIf="banners">
+    <div class='row content-banner'>
+        <a class="pull-right" [routerLink]="['/banner-add']">
+            <div class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span>
+                THÊM BANNER
+            </div>
+        </a>
+    </div>
+    <br>
+    <div class="table card-list">
+        <div class="custom-table">
+            <table datatable class="row-border hover" id="table_id" dt-instance="dtInstanceCallback" [dtOptions]='dtOptions'>
+                <thead>
+                    <tr>
+                        <th class='checkbox-banner'><input type="checkbox" name="select_all" id="select-all" (change)="selectAllEvent($event);"/></th>
+                        <th><span>ID</span></th>
+                        <th><span>Banner</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-data" *ngFor="let banner of banners">
+                        <td><input type="checkbox" (change)="selectCheckbox($event);"/></td>
+                        <td>{{ banner.id }}</td>
+                        <td> <a [routerLink]="['/banner-detail/', banner.id]">{{ banner.sub_url_web }}</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='row' >
+            <div class="col-md-3">
+                <select name="" class="form-control">
+                    <option value="">Xóa các banner được chọn</option>
+                </select>
+            </div>
+            <div class="col-md-3" >
+                {{length_selected}} của {{length_all}} được chọn
+                <button (click)="confirmDelete()" type="button" class="button-banner btn btn-danger">Thực hiện</button>
+            </div>
+        </div>
+    </div>
+</div>

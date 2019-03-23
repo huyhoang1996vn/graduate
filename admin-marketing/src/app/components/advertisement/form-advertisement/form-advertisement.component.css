@@ -1,0 +1,13 @@
+/*Begin title-ad*/
+.form-adv-add {
+	padding: 0 15px;
+}
+.errors {
+	color: red;
+}
+label.checkbox-label input[type=checkbox]{
+    position: relative;
+    vertical-align: middle;
+    bottom: 4px;
+}
+/*End content-adv*/

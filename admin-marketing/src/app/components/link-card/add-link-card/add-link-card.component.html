@@ -1,0 +1,23 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/link-card-list">Thẻ Liên Kết</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Thêm Thẻ Liên Kết</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">LIÊN KẾT THẺ HELIO</p>
+</div>
+<form-user-app [status_error]="status_error" (is_btn_linkcard_app)='btnApp($event)' 
+    (is_submit)='checkSubmitApp($event)'></form-user-app>
+<form-user-embed [status_error]="status_error" (is_btn_linkcard_embed)='btnEmbed($event)' 
+    (is_submit)='checkSubmitEmbed($event)'></form-user-embed>
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <button class="btn btn-success pull-right" (click)="onCardLink()" [disabled]="is_btn_linkcard">Liên Kết</button>
+    </div>
+</div>

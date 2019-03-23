@@ -1,0 +1,53 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Mệnh Giá Nạp Tiền</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">Mệnh Giá Nạp Tiền</p>
+</div>
+<div *ngIf="denominations">
+    <div class='row title-denomination'>
+    	<a class="pull-right" routerLink="/denomination-add">
+    		<div class="btn btn-primary">
+    			<span class="glyphicon glyphicon-plus"></span>
+    			THÊM Mệnh Giá Nạp Tiền
+    		</div>
+    	</a>
+    </div>
+    <br>
+    <div class="table card-list">
+    	<table datatable class="row-border hover" id="table_id" dt-instance="dtInstanceCallback" [dtOptions]='dtOptions'>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" name="select_all" id="select-all" (change)="selectAllEvent($event);"/></th>
+                    <th><span>ID</span></th>
+                    <th><span>Mệnh Giá Nạp Tiền(VNĐ)</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row-data" *ngFor="let denomination of denominations">
+                    <td><input type="checkbox" (change)="selectCheckbox($event);"/></td>
+                    <td>{{ denomination.id }}</td>
+                    <td><a routerLink="/denomination-detail/{{ denomination.id }}">{{denomination.denomination | number}}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    	<div class='row'>
+    		<div class="col-md-3">
+    			<select name="" class="form-control select-deno">
+    				<option value="">Xóa các mệnh giá nạp tiền được chọn</option>
+    			</select>
+    		</div>
+    		<div class="col-md-3">
+    			{{length_selected}} của {{length_all}} được chọn
+    			<button (click)="confirmDelete()" type="button" class="button-deno btn btn-danger">Thực hiện</button>
+    		</div>
+    	</div>
+    </div>
+</div>

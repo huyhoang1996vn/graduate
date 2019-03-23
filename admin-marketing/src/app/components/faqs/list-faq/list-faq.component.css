@@ -1,0 +1,27 @@
+.dels-faq{
+    margin-bottom: 50px;
+}
+.mt-50{
+    margin-top: 50px;
+}
+.mb-30{
+    margin-bottom: 30px;
+}
+.mb-15{
+    margin-bottom: 15px;
+}
+.mt-15{
+    margin-top: 15px;
+}
+.messsage{
+    color: green;
+}
+.messsage_error{
+    color: red;
+}
+.custom-title a {
+	padding: 5px 0;
+}
+.select-faq {
+    padding: 6px 7px 6px 9px;
+}

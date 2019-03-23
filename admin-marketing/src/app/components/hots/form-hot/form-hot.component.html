@@ -1,0 +1,81 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/hot/list">Hot</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{title_page}}</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row mt-30 mb-30 text-center">
+    <div class="col-xs-12 col-md-12">
+        <p class="title">{{title_page}}</p>
+        <hr/>
+    </div>
+</div>
+<ng-container *ngIf="errorMessage">
+    <h4 *ngFor="let error of errorMessage | mapToIterable" class="error_msg">
+        {{error.val}}
+    </h4>
+</ng-container>
+<form [formGroup]="formHot" novalidate *ngIf="hot">
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Tên</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="name"/>
+            <show-error-valid [control]="formHot.get('name')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Sub Url</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="sub_url_web"/>
+            <show-error-valid [control]="formHot.get('sub_url_web')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Hình Ảnh</label>
+        </div>
+        <div class="col-sm-8">
+            <p *ngIf="hot.image">
+                <span>Hiện tại: <a href="{{api_domain}}{{hot.image}}" target="_blank">{{hot.image}}</a></span>
+            </p>
+            <input type="file" accept="image/*"
+            (change)="onFileChange($event)" #inputImage/>
+            <ul class="error_valid" 
+                *ngIf="formHot.get('image') && formHot.get('image')?.errors">
+                <li style="color: red" *ngIf="formHot.get('image').errors?.fomatFile">
+                    Vui lòng tải tệp lên với các định dạng này (jpg, jpeg, png, ico, bmp)
+                </li>
+            </ul>
+            <show-error-valid [control]="formHot.get('image')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Hiển Thị</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="checkbox" value="" formControlName="is_show"
+            />
+        </div>
+    </div>
+
+    <hr/>
+    <button class="btn btn-danger" (click)="deleteHotEvent()" *ngIf="hot.id">
+        XÓA
+    </button>
+    <button class="btn btn-primary pull-right" (click)="onSubmit()">
+        LƯU LẠI
+    </button>
+</form>

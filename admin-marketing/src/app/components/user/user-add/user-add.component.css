@@ -1,0 +1,32 @@
+/*Begin content add User*/
+button.clear-file.btn.btn-danger {
+	margin-top: 10px;
+}
+.title-user {
+	margin: 10px 0;
+	padding: 10px 0;
+}
+p.title {
+	font-size: 34px;
+}
+.content-form-add-user {
+    padding: 8px 0px;
+}
+p.errors {
+	color: red;
+}
+label.center-block {
+	text-transform: capitalize;
+}
+/* == css for input password == */
+.input-password {
+	padding: 5px 50px 5px 10px;
+}
+.file-icon {
+	float: right;
+	position: absolute;
+	top: 0%;
+	right: 15px;
+	cursor: pointer;
+}
+/*End content add User*/

@@ -1,0 +1,40 @@
+
+/* custom data table */
+
+.wrapper-table{
+	padding: 10px;
+}
+.fee-tb{
+	width: auto;
+}
+.checkbox-tb{
+	width: 70px;
+}
+.mt-30{
+    margin-top: 30px;
+}
+.mb-30{
+    margin-bottom: 30px;
+}
+.mt-15{
+    margin-top: 15px;
+}
+.custom-title {
+    margin: 20px 5px;
+    border-bottom: 2px solid #111;
+    padding: 10px 0px;
+}
+table.dataTable thead .sorting_asc{
+	width: 70px;
+    padding-left: 10px;
+}
+table.dataTable thead .sorting_desc{
+	width: 70px;
+    padding-left: 10px;
+}
+.under-table{
+	margin-bottom: 50px;
+}  
+.btn-delete-fee{
+	margin-left: 25px;
+}

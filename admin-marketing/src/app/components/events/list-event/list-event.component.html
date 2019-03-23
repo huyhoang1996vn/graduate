@@ -1,0 +1,66 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Sự Kiện</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">Sự Kiện</p>
+</div>
+<div *ngIf="events">
+    <div class="row mt-50 mb-15 custom-title">
+        <div class="col-xs-12 col-sm-12">
+            <a class="pull-right" [routerLink]="['/event/add/', {lang: 'vi'}]">
+                <div class="btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    THÊM SỰ KIỆN
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="row mb-30 language">
+        <div class="col-xs-12 col-sm-12">
+            <div class="btn-group pull-right">
+                <button type="button" class="btn {{ lang === 'vi' ? 'btn-primary' : 'btn-info' }}"
+                    (click)="changeLang('vi')"
+                >VI</button>
+                <button type="button" class="btn {{ lang === 'vi' ? 'btn-info' : 'btn-primary' }}"
+                    (click)="changeLang('en')"
+                >EN</button>
+            </div> 
+        </div>
+    </div>
+    <div class="custom_table">
+        <table datatable class="row-border hover" [dtOptions]='dtOptions' id="table_id" dt-instance="dtInstanceCallback" >
+            <thead>
+                <tr>
+                    <th><input type="checkbox" name="select_all" id="select-all" (change)="selectAllEvent($event);"/></th>
+                    <th><span>ID</span></th>
+                    <th><span>Sự kiện</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row-data" *ngFor="let event of events">
+                    <td><input type="checkbox" (change)="selectCheckbox($event);"/></td>
+                    <td>{{ event.id }}</td>
+                    <td><a [routerLink]="['/event/edit/', event.id, {lang: lang}]">{{ event.name }}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row dels-event" *ngIf="events">
+        <div class="col-md-3">
+            <select name="" class="form-control">
+                <option value="1">Xóa các sự kiện được chọn</option>
+            </select>
+        </div>
+        <div class="col-md-3 dels-list">
+            {{ length_selected }} của {{ length_all }} được chọn 
+            <button class="btn btn-danger" (click)="deleteEvent()">Thực hiện</button>
+        </div>
+    </div>
+</div>

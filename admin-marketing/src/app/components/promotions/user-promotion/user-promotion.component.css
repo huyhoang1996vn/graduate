@@ -1,0 +1,12 @@
+.mb-20 {
+    margin-bottom: 20px;
+}
+.qr_code{
+    padding-right: 20px;
+}
+/deep/ .custom-popup.modal-dialog{
+    width: 60%;
+}
+/deep/ .custom-popup.modal-content{
+    padding-bottom: 40px;
+}

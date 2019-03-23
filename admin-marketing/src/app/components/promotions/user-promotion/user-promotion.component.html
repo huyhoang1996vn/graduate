@@ -1,0 +1,99 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/promotions">Khuyến Mãi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chi Tiết Khuyến Mãi</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <h1 class="h1-title">CHI TIẾT KHUYẾN MÃI</h1>
+</div>
+<div class="row mb-20 custom-title"  *ngIf="promotion">
+    <div class="col-sm-6">
+        <a class="btn custom-button mb-20" routerLink="/promotions">
+            <i class="fa fas fa-arrow-left icon-button"></i>
+            TRỞ VỀ QUẢN LÝ KHUYẾN MÃI
+        </a>
+        <div>
+            <p><label>ID : </label> {{promotion.id}}</p>
+            <p><label>Tên Khuyến Mãi : </label> {{promotion.name}}</p>
+            <p><label>Tình Trạng : </label> {{ promotion.is_draft ? "Draft" : "Đã Triển Khai" }}</p>
+            <p><label>Ngày Tạo : </label> {{promotion.created | date : 'dd/MM/yyyy'}}</p>
+            <p><label>Người Triển Khai :</label> {{ promotion.user_implementer?.email }}</p>
+            <p><label>Loại Khuyến Mãi : </label> {{ promotion.promotion_type?.name }}</p>
+            <p><label>QR code : </label> 
+                <ng-container *ngIf="ID_TYPE_PROMOTION_DAI_TRA !== promotion.promotion_type?.id">
+                    <img src="{{api_domain}}{{promotion.QR_code}}" *ngIf="promotion.QR_code" height="50px" width="50px" />
+                </ng-container>
+            </p>
+            <p *ngIf="user_current">
+        <input type="checkbox" (change)="isUpdatePromotion($event)" [disabled]="user_current.role !== SYSTEM_ADMIN"/> 
+            Sửa khuyến mãi đã triển khai (Chức năng này chỉ dành cho System Admin)
+        </p>
+        <p *ngIf="is_update">
+            <button type="button" class="btn custom-button" (click)="showPopup()" data-toggle="modal" data-target="#UpdatePromotion">
+                <i class="fa fas fa-pencil-square-o icon-button"></i>
+                {{promotion.is_draft ? 'SỬA NỘI DUNG KHUYẾN MÃI' : 'SỬA NỘI DUNG KHUYẾN MÃI ĐÃ TRIỂN KHAI'}}
+            </button>
+        </p>
+        </div>
+        
+    </div>
+    <div class="col-sm-2 qr_code" *ngIf="ID_TYPE_PROMOTION_DAI_TRA !== promotion.promotion_type?.id">
+        <button *ngIf="!promotion.QR_code && user_current" class="btn custom-button btn-block text-right" 
+            (click)="generator_QR_code($event, promotion.id)"
+            [attr.disabled]="isDisableQRCode(promotion)"
+            data-loading-text="<i class='fa fa-spinner fa-spin'></i>Tạo QR Code">Tạo QR Code</button>
+    </div>
+    <div class="col-sm-4 pull-right" *ngIf="user_current">
+        <span *ngIf="!isDisableCreateNotificaiton(promotion)">
+             <a *ngIf="!notification.id" class="btn custom-button btn-block" 
+                [routerLink]="['/notification/add', {promotion: promotion.id, lang: 'vi'}]"
+            >
+                <i class="fa fas fa-plus icon-button"></i>
+                TẠO THÔNG BÁO CHO KHUYẾN MÃI
+            </a>
+        </span>
+        <span *ngIf="isDisableCreateNotificaiton(promotion)">
+            <a *ngIf="!notification.id" class="btn custom-button btn-block" disabled>
+                <i class="fa fas fa-plus icon-button"></i>
+                TẠO THÔNG BÁO CHO KHUYẾN MÃI
+            </a>
+        </span>
+        <span *ngIf="!isDisableUpdateNotificaiton(promotion, notification)">
+            <a *ngIf="notification.id" class="btn custom-button btn-block" 
+                [routerLink]="['/notification/edit/', notification.id, {promotion: promotion.id, lang: lang}]"
+            >
+                <i class="fa fas fa-pencil-square-o icon-button"></i>
+                CẬP NHẬT THÔNG BÁO CHO KHUYẾN MÃI
+            </a>
+        </span>
+        <span *ngIf="isDisableUpdateNotificaiton(promotion, notification)">
+            <a *ngIf="notification.id" class="btn custom-button btn-block" disabled>
+                <i class="fa fas fa-pencil-square-o icon-button"></i>
+                CẬP NHẬT THÔNG BÁO CHO KHUYẾN MÃI
+            </a>
+        </span>
+        <a class="btn custom-button btn-block" [routerLink]="['/promotions/report/', promotion.id, {lang: lang}]">
+            TỔNG HỢP TRIỂN KHAI KHUYẾN MÃI
+        </a>
+        <a class="btn custom-button btn-block" *ngIf="notification.id" [routerLink]="['/notification/detail/', notification.id, {lang: lang}]">
+            ĐI TỚI CHI TIẾT THÔNG BÁO <i class="fa fas fa-arrow-right icon-button-right"></i>
+        </a>
+    </div>
+</div>
+
+<app-user-multiselect 
+	[user_list_left]="user_list_left" 
+	[user_list_right]="user_list_right" 
+	(save)="updateUserPromotion($event)"
+    [promotion]="promotion"
+    [is_disable_promotion]="is_disable_promotion"
+    *ngIf="promotion"
+    >
+</app-user-multiselect>
+<popup-edit-promotion *ngIf="is_show_popup" (update_promotion)='updatePromotion($event)'></popup-edit-promotion>

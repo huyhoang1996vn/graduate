@@ -1,0 +1,16 @@
+<h1 class="text-center h1-title"> SITE QUẢN TRỊ HỆ THỐNG </h1>
+<div class="row">
+	<div class="col-md-6">
+		<div class="list-group">
+			<a *ngFor="let site of sites | sortString:'name'" routerLink="{{ site.link }}" class="list-group-item list-group-item-action" >{{ site.name }}</a>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="list-group">
+			<a routerLink="/role-permission" class="list-group-item list-group-item-action">Phân Quyền Cho Role</a>
+			<a routerLink="/user-permission" class="list-group-item list-group-item-action">Phân Quyền Cho User</a>
+			<a routerLink="/user-list" class="list-group-item">User</a>
+		</div>
+	</div>
+</div>
+

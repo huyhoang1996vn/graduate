@@ -1,0 +1,29 @@
+#fee_type{
+	width: 90px;
+}
+.feeAddForm_error{
+	color: red;
+	padding-left: 15px;
+	margin-top: 10px;
+}
+.mt-30{
+    margin-top: 30px;
+}
+.mb-30{
+    margin-bottom: 30px;
+}
+/* hidden arrow in number input */
+.no-arrow::-webkit-inner-spin-button, 
+.no-arrow::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+#deposit{
+	margin-left: 40px;
+}
+.position_error{
+	color: red;
+}
+.area-button {
+	padding: 5px 0;
+}

@@ -1,0 +1,17 @@
+.multiselect_footer{
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+.button-selectall{
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #337ab7;
+    margin-bottom: 10px;
+    margin-right: 20px;
+}
+/*Customize sort dataTable*/
+table.dataTable thead .sorting > span,
+table.dataTable thead .sorting_asc > span,
+table.dataTable thead .sorting_desc > span{
+    width: 64px;
+}

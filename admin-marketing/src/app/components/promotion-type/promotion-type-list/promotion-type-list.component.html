@@ -1,0 +1,31 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Loại Khuyến Mãi</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">Loại Khuyến Mãi</p>
+</div>
+<div *ngIf="proTypes">
+    <div class="row content-promotion-type"> 
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Loại Khuyến Mãi</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor ="let proType of proTypes">
+                    <td>{{ proType.id }}</td>
+                <td>{{ proType.name }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

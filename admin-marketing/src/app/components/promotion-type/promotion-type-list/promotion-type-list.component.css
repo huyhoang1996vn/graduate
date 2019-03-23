@@ -1,0 +1,12 @@
+/*Begin content-denomination*/
+.content-promotion-type {
+	padding: 8px 15px;
+}
+p.title-promotion-type {
+	border-bottom: 2px solid black;
+	margin-bottom: 10px;
+	padding: 5px 0 10px 0;
+	font-size: 16px;
+}
+
+/*End content-denomination*/

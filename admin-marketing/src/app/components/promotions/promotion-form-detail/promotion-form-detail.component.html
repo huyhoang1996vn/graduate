@@ -1,0 +1,251 @@
+<!-- Start breadcrumb -->
+<div class="row" *ngIf="position !== 'popup'">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/promotions">Khuyến Mãi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{title_page}}</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row mt-30 mb-30 text-center" *ngIf="position !== 'popup'">
+    <div class="col-xs-12 col-md-12">
+        <p class='title'>{{title_page}}</p>
+        <hr/>
+    </div>
+</div>
+
+
+<ng-container *ngIf="errors">
+    <p *ngFor="let error of errors | mapToIterable" class="error_msg">
+        {{error.val}}
+    </p>
+</ng-container>
+
+<form [formGroup]="promotionForm" novalidate *ngIf="promotion && promotionTypes && promotionLabels && categorys && user_current">
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Tên Khuyến Mãi </label>
+        </div>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" formControlName="name"/>
+            <show-error-valid [control]="promotionForm.get('name')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row promotion-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Hình Ảnh</label>
+        </div>
+        <div class="col-sm-10">
+            <p *ngIf="promotion.image">
+                <span>Hiện tại: <a href="{{api_domain}}{{promotion.image}}" target="_blank">{{promotion.image}}</a></span>
+            </p>
+            <p *ngIf="promotion.image" class="clear_image">
+                <input type="checkbox" formControlName="is_clear_image"/> Xóa
+            </p>
+            <p *ngIf="msg_clear_image" class="error_msg">{{msg_clear_image}}</p>
+            <input type="file" class="form-control-file" id="image" accept="image/*" (change)="onFileChange($event)" />
+            <ul class="error_valid" 
+                *ngIf="promotionForm.get('image') && promotionForm.get('image')?.errors">
+                <li style="color: red" *ngIf="promotionForm.get('image').errors?.fomatFile">
+                    Vui lòng tải tệp lên với các định dạng này (jpg, jpeg, png, ico, bmp)
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-group row promotion-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Thumbnail Cho App</label>
+        </div>
+        <div class="col-sm-10">
+            <p *ngIf="promotion.image_thumbnail">
+                <span>Hiện tại: <a href="{{api_domain}}{{promotion.image_thumbnail}}" target="_blank">{{promotion.image_thumbnail}}</a></span>
+            </p>
+            <p *ngIf="promotion.image_thumbnail" class="clear_image">
+                <input type="checkbox" formControlName="is_clear_image_thumbnail"/> Xóa
+            </p>
+            <p *ngIf="msg_clear_thumbnail" class="error_msg">{{msg_clear_thumbnail}}</p>
+            <input type="file" class="form-control-file" accept="image/*" id="image_thumbnail" (change)="onFileChange($event)"/>
+            <ul class="error_valid" 
+                *ngIf="promotionForm.get('image_thumbnail') && promotionForm.get('image_thumbnail')?.errors">
+                <li style="color: red" *ngIf="promotionForm.get('image_thumbnail').errors?.fomatFile">
+                    Vui lòng tải tệp lên với các định dạng này (jpg, jpeg, png, ico, bmp)
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Mô Tả </label>
+        </div>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" formControlName="short_description"/>
+            <show-error-valid [control]="promotionForm.get('short_description')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Nội Dung </label>
+        </div>
+        <div class="col-sm-10">
+        	<span *ngIf="isDisable()">
+                <ckeditor formControlName="content" readonly="{{true}}"> </ckeditor>
+            </span>
+            <span *ngIf="!isDisable()">
+                <ckeditor formControlName="content" [config]="ckEditorConfig"> </ckeditor>
+            </span>
+            <show-error-valid [control]="promotionForm.get('content')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Danh Mục Khuyến Mãi</label>
+        </div>
+        <div class="col-sm-4" *ngIf="categorys">
+            <select class="form-control" formControlName="promotion_category">
+                <option value="">-- CHỌN DANH MỤC KHUYẾN MÃI --</option>
+                <option *ngFor="let category of categorys" value="{{ category.id }}">{{ category.name }}</option>
+            </select>
+            <show-error-valid [control]="promotionForm.get('promotion_category')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Nhãn Khuyến Mãi</label>
+        </div>
+        <div class="col-sm-4" *ngIf="promotionLabels">
+            <select class="form-control" formControlName="promotion_label">
+                <option value="">-- CHỌN NHÃN KHUYẾN MÃI --</option>
+                <option *ngFor="let label of promotionLabels" value="{{ label.id }}">{{ label.name }}</option>
+            </select>
+            <show-error-valid [control]="promotionForm.get('promotion_label')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Loại Khuyến Mãi</label>
+        </div>
+        <div class="col-sm-4" *ngIf="promotionTypes">
+            <select class="form-control" formControlName="promotion_type">
+                <option value="">-- CHỌN LOẠI KHUYẾN MÃI --</option>
+                <option *ngFor="let type of promotionTypes" [value] ="type.id">{{ type.name }}</option>
+            </select>
+            <show-error-valid [control]="promotionForm.get('promotion_type')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Ngày Áp Dụng</label>
+        </div>
+        <div class="col-sm-4 input-group custom-date">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dtApplyDate">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="apply_date" 
+                [owlDateTime]="dtApplyDate" id="start_date"
+            />         
+            <owl-date-time [pickerType]="'calendar'" [disabled]="isDisable()"  #dtApplyDate></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="promotionForm.get('apply_date')"></show-error-valid>
+            <ul *ngIf="!promotionForm.get('end_time').errors?.fomatDate && 
+                !promotionForm.get('apply_time').errors?.fomatDate">
+                <li style="color: red">
+                    {{ promotionForm.errors?.datempty ? 'Vui lòng nhập ngày áp dụng': '' }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Ngày Kết Thúc</label>
+        </div>
+        <div class="col-sm-4 input-group custom-date">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dtEndDate">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="end_date" 
+                [owlDateTime]="dtEndDate" id="end_date"
+            />         
+            <owl-date-time [pickerType]="'calendar'" [disabled]="isDisable()" #dtEndDate></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="promotionForm.get('end_date')"></show-error-valid>
+            <ul *ngIf="!promotionForm.get('end_date').errors?.fomatDate && 
+                !promotionForm.get('apply_date').errors?.fomatDate">
+                <li style="color: red">
+                    {{ promotionForm.errors?.dates ? 'Vui lòng nhập ngày kết thúc lớn hơn hoặc bằng ngày áp dụng' : '' }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Thời Gian Áp Dụng</label>
+        </div>
+        <div class="col-sm-4 input-group">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dtApplyTime">
+                <i class="fa fa-clock-o"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="apply_time"
+                [owlDateTime]="dtApplyTime" id="start_time"
+            />         
+            <owl-date-time [pickerType]="'timer'" [disabled]="isDisable()" #dtApplyTime></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="promotionForm.get('apply_time')"></show-error-valid>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Thời Gian Kết Thúc</label>
+        </div>
+        <div class="col-sm-4 input-group">
+            <span class="input-group-addon" [owlDateTimeTrigger]="dtEndTime">
+                <i class="fa fa-clock-o"></i>
+            </span>
+            <input type="text" class="form-control event-date" formControlName="end_time"
+                [owlDateTime]="dtEndTime" id="end_time"
+            />         
+            <owl-date-time [pickerType]="'timer'" [disabled]="isDisable()" #dtEndTime></owl-date-time>
+        </div>
+        <div class="col-md-offset-2 custom-date">
+            <show-error-valid [control]="promotionForm.get('end_time')"></show-error-valid>
+            <ul *ngIf="!promotionForm.get('end_time').errors?.fomatDate && 
+                !promotionForm.get('apply_time').errors?.fomatDate">
+                <li style="color: red">
+                    {{ promotionForm.errors?.slectedtime ? 'Vui lòng nhập thời gian áp dụng/kết thúc': '' }}
+                    {{ promotionForm.errors?.times ? 'Vui lòng nhập thời gian kết thúc lớn hơn thời gian áp dụng': '' }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Is Draft</label>
+        </div>
+        <div class="col-sm-6">
+            <input type="checkbox" formControlName="is_draft"/>
+        </div>
+    </div>
+    <div class="form-group row">
+    	<div class="col-sm-12">
+		    <button class="btn btn-danger" (click)="deletePromotionEvent()" *ngIf="promotion.id && position !== 'popup'">
+		        XÓA
+		    </button>
+		    <button class="btn btn-primary pull-right" (click)="saveEvent()">
+		        LƯU LẠI
+		    </button>
+		</div>
+	</div>
+
+</form>

@@ -1,0 +1,167 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/post/list">Bài Viết</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{title_page}}</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row mt-30 mb-30 text-center">
+    <div class="col-xs-12 col-md-12">
+        <p class="title">{{title_page}}</p>
+        <hr/>
+    </div>
+</div>
+<ng-container *ngIf="errorMessage">
+    <h4 *ngFor="let error of errorMessage | mapToIterable" class="message_error">
+        {{error.val}}
+    </h4>
+</ng-container>
+<form [formGroup]="formPost" novalidate *ngIf="post">
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Tên</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="name"/>
+            <show-error-valid [control]="formPost.get('name')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Hình Ảnh</label>
+        </div>
+        <div class="col-sm-8">
+            <p *ngIf="post.image">
+                <span>Hiện tại: <a href="{{api_domain}}{{post.image}}" target="_blank">{{post.image}}</a></span>
+            </p>
+            <p *ngIf="post.image" class="clear_image">
+                <input type="checkbox" formControlName="is_clear_image"/> Xóa
+            </p>
+            <p *ngIf="msg_clear_image" class="msg_error">{{msg_clear_image}}</p>
+            <input type="file" accept="image/*"
+            (change)="onFileChange($event)"/>
+            <ul class="error_valid" 
+                *ngIf="formPost.get('image') && formPost.get('image')?.errors">
+                <li style="color: red" *ngIf="formPost.get('image').errors?.fomatFile">
+                    Vui lòng tải tệp lên với các định dạng này (jpg, jpeg, png, ico, bmp)
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Mô Tả</label>
+        </div>
+        <div class="col-sm-8">
+            <textarea rows="3" class="form-control" formControlName="short_description"></textarea>
+            <show-error-valid [control]="formPost.get('short_description')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Nội Dung</label>
+        </div>
+        <div class="col-sm-8">
+            <ckeditor formControlName="content" [config]="ckEditorConfig"></ckeditor>
+            <show-error-valid [control]="formPost.get('content')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Loại Bài Viết</label>
+        </div>
+        <div class="col-sm-6" *ngIf="post_types">
+            <select class="form-control" formControlName="post_type" #post_type (change)="check_post_career(post_type.value)">
+                <option value="">-- CHỌN LOẠI BÀI VIẾT --</option>
+                <option *ngFor="let type of post_types" 
+                     value="{{ type.id }}" [selected]="type.id === post.post_type"
+                >
+                {{ type.name }}</option>
+            </select>
+            <show-error-valid [control]="formPost.get('post_type')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Hiển Thị Đầu Trang</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="checkbox" formControlName="pin_to_top" [attr.disabled]="is_post_career ? null : false"/>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Key Query</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="key_query" 
+            [attr.disabled]="post.id ? true : null"/>
+            <show-error-valid [control]="formPost.get('key_query')"></show-error-valid>
+        </div>
+    </div>
+
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Hình Ảnh Bài Viết</label>
+        </div>
+        <div class="col-sm-8">
+            <ul class="list-group image-current" *ngIf="post.posts_image">
+                Hiện tại:
+                <li class="list-group-item" *ngFor="let post_image of post.posts_image">
+                    <input type="checkbox" (change)="delsMutilImage($event, post_image)"/> Xóa &emsp;&emsp;
+                    <a href="{{api_domain}}{{post_image.image}}" target="_blank">{{post_image.image}}</a>
+                    <p>Thay đổi: <input type="file" accept="image/*" (change)="editFileImage($event, post_image)"/></p>
+                </li>
+                <p *ngIf="msg_clear_multi_image" class="msg_error">{{msg_clear_multi_image}}</p>
+            </ul>
+            <ul class="multi-image list-group">
+                <p>Multiupload</p>
+                <li class="list-group-item">
+                    <input type="file" accept="image/*" title='Nhấn "Ctrl" để chọn nhiều hình ảnh'
+                        (change)="onFileMultipleChange($event, -1)" multiple/>
+                </li>
+                <p>Upload</p>
+                <li class="list-group-item" *ngFor="let num of input_multi_image">
+                    <input type="file" accept="image/*" (change)="onFileMultipleChange($event, num.index)"/>
+                    <i class="fa fa-minus fa-2x pull-right" (click)="subImagePost(num.index)"></i>
+                </li>
+            </ul>
+            <ul class="error_valid" 
+                *ngIf="formPost.get('posts_image') && formPost.get('posts_image')?.errors">
+                <li style="color: red" *ngIf="formPost.get('posts_image').errors?.fomatMultiFile">
+                    Vui lòng tải tệp lên với các định dạng này (jpg, jpeg, png, ico, bmp)
+                </li>
+            </ul>
+            <button class="btn btn-primary" (click)="addImagePost()">
+                <i class="fa fa-plus"></i> Thêm một Hình ảnh bài viết
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group row noti-image">
+        <div class="col-sm-2">
+            <label class="col-form-label form-check-label">Is Draft</label>
+        </div>
+        <div class="col-sm-6">
+            <input type="checkbox" formControlName="is_draft"/>
+        </div>
+    </div>
+
+    <hr/>
+    <button class="btn btn-danger" (click)="deletePostEvent()" *ngIf="post.id">
+        XÓA
+    </button>
+    <button class="btn btn-primary pull-right" (click)="onSubmit()">
+        LƯU LẠI
+    </button>
+</form>

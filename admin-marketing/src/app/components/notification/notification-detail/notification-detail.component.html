@@ -1,0 +1,70 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/notification/list">Thông Báo</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chi Tiết Thông Báo</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">CHI TIẾT THÔNG BÁO</p>
+</div>
+<div *ngIf="noti_detail && ((noti_detail?.promotion && promotion) || !noti_detail.promotion)">
+    <div class="row mb-30 custom-title {{noti_detail.is_public ? 'hidden-line' : ''}}">
+        <p>
+            <a class="btn custom-button" routerLink="/notification/list">
+                <i class="fa fas fa-arrow-left icon-button"></i>
+                TRỞ VỀ TRANG QUẢN LÝ THÔNG BÁO
+            </a>
+            <a *ngIf="noti_detail.promotion" class="btn custom-button pull-right" [routerLink]="['/users-promotions/', noti_detail.promotion]">
+                ĐI TỚI CHI TIẾT KHUYẾN MÃI
+                <i class="fa fas fa-arrow-right icon-button-right"></i>
+            </a>
+        </p>
+        <p>ID: {{noti_detail.id}}</p>
+        <p>Tên Thông Báo: {{noti_detail.subject}}</p>
+        <p *ngIf="noti_detail.sent_date">Trạng Thái: Đã gửi</p>
+        <p *ngIf="!noti_detail.sent_date">Trạng Thái: Chưa gửi</p>
+        <p>Ngày Gửi: {{noti_detail.sent_date | date: 'dd/MM/yyyy'}}</p>
+        <p>Người Gửi: {{noti_detail.sent_user?.email}}</p>
+        <!-- <p>Loại Thông Báo: {{noti_detail.is_public? 'Thông báo chung':'Thông báo theo danh sách user'}}</p> -->
+        <p>Ngày Cập Nhật: {{noti_detail.modified | date: 'dd/MM/yyyy'}}</p>
+        <span *ngIf="promotion">
+            <p>ID Khuyến Mãi: {{promotion.id}}</p>
+            <p>Tên Khuyến Mãi: {{promotion.name}}</p>
+        </span>
+        <p *ngIf="user_current"><button class="btn custom-button" (click)="checkSendNotification()" 
+                [disabled]="user_current.role !== SYSTEM_ADMIN && noti_detail.sent_date"
+            >
+                <i class="fa fas fa-paper-plane icon-button"></i>
+                <ng-container *ngIf="!noti_detail.sent_date">GỬI THÔNG BÁO</ng-container>
+                <ng-container *ngIf="noti_detail.sent_date">
+                    GỬI LẠI THÔNG BÁO
+                </ng-container>
+            </button>
+        </p>
+        <p *ngIf="user_current">
+            <input type="checkbox" (change)="isUpdateNoti($event)" [disabled]="user_current.role !== SYSTEM_ADMIN"/> 
+            Sửa thông báo đã gửi (Chức năng này chỉ dành cho System Admin)
+        </p>
+        <p *ngIf="is_update">
+            <button type="button" class="btn custom-button" data-toggle="modal" data-target="#UpdateNoti">
+                <i class="fa fas fa-pencil-square-o icon-button"></i>
+                {{noti_detail.sent_date ? 'SỬA NỘI DUNG THÔNG BÁO ĐÃ GỬI' : 'SỬA NỘI DUNG THÔNG BÁO'}}
+            </button>
+        </p>
+    </div>
+
+    <app-user-multiselect [hidden]="noti_detail.is_public"
+        [user_list_left]="user_list_left"
+        [user_list_right]="user_list_right"
+        (save)="update_user_noti($event)"
+        [notification]="noti_detail"
+        [is_disable_notification]="is_disable_notification"
+        *ngIf="noti_detail"
+    >
+    </app-user-multiselect>
+    <popup-edit-notification (update_noti)='updateNoti($event)'></popup-edit-notification>

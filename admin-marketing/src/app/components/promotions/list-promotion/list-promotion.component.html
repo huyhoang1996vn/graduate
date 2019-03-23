@@ -1,0 +1,111 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Khuyến Mãi</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">Khuyến Mãi</p>
+</div>
+<div *ngIf="promotion_list && user_current">
+    <div class="row mt-50 mb-15 custom-title">
+        <div class="col-xs-12 col-sm-12">
+            <a class="pull-right" [routerLink]="['/promotions/add/', {lang: 'vi'}]">
+                <div class="btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    THÊM KHUYẾN MÃI
+                </div>
+            </a>
+        </div>
+    </div>
+    <div *ngIf="message_result" class="row">
+        <div class="col-md-12">
+            <div *ngIf="message_result" class="alert alert-success">
+                {{ message_result }}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-30 language">
+        <div class="col-xs-12 col-sm-12">
+            <div class="btn-group pull-right">
+                <button type="button" class="btn {{ lang === 'vi' ? 'btn-primary' : 'btn-info' }}"
+                    (click)="changeLang('vi')"
+                >VI</button>
+                <button type="button" class="btn {{ lang === 'vi' ? 'btn-info' : 'btn-primary' }}"
+                    (click)="changeLang('en')"
+                >EN</button>
+            </div> 
+        </div>
+    </div>
+    <div class="row custom_table">
+        <div class="col-md-12">
+            <div class="datatable-content">
+                <table id="table_id" datatable [dtOptions]="dtOptions"  dt-instance="dtInstanceCallback" class="row-border hover"  >
+                    <thead>
+                        <tr>
+                            <th class="text-center"><input type="checkbox" name="select_all" id="select-all" (change)="selectAllEvent($event);" /></th>
+                            <th><span>ID</span></th>
+                            <th><span>Tên Khuyến Mãi</span></th>
+                            <th><span>Tình Trạng</span></th>
+                            <th><span>Ngày Tạo</span></th>
+                            <th><span>Người Triển Khai</span></th>
+                            <th><span>Loại Khuyến Mãi</span></th>
+                            <th><span>&nbsp;&nbsp;</span></th>
+                            <th><span>&nbsp;&nbsp;</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let promotion of promotion_list" 
+                            class="row-data {{isCheckDisplay(promotion) ? 'disabled_checkbox': ''}}">
+                            <td class="text-center">
+                                <input type="checkbox" (change)="selectCheckbox($event);"
+                                    [attr.disabled]="isDisable(promotion)"
+                                />
+                            </td>
+                            <td>{{ promotion.id }}</td>
+                            <td *ngIf="isDisableQRCode(promotion)">
+                                {{ promotion.name }}
+                            </td>
+                            <td *ngIf="!isDisableQRCode(promotion)">
+                                <a [routerLink]="['/promotions/', promotion.id, 'change', {lang: lang}]">{{ promotion.name }}</a>
+                            </td>
+                            <td>{{ promotion.is_draft ? "Draft" : "Đã Triển Khai" }}</td>
+                            <td><span class="hidden">{{ promotion.created | date:'yyyyMMdd' }}</span>{{ promotion.created | date : 'dd/MM/yyyy'}}</td>
+                            <td>{{ promotion.user_implementer?.email }}</td>
+                            <td>{{ promotion.promotion_type?.name }}</td>
+                            <td class="text-center">
+                                <ng-container *ngIf="ID_TYPE_PROMOTION_DAI_TRA !== promotion.promotion_type?.id">
+                                    <img src="{{api_domain}}{{promotion.QR_code}}" *ngIf="promotion.QR_code; else create_qrcode_btn" height="50px" width="50px" />
+                                    <ng-template #create_qrcode_btn>
+                                        <button  class="btn btn-primary text-center" (click)="generator_QR_code($event, promotion.id)"
+                                            [attr.disabled]="isDisableQRCode(promotion)"
+                                            data-loading-text="<i class='fa fa-spinner fa-spin'></i>Tạo QR Code">Tạo QR Code</button>
+                                    </ng-template>
+                                </ng-container>
+                            </td>
+                            <td class="text-center">
+                                <a class = "btn btn-primary" [routerLink]="['/users-promotions/', promotion.id, {lang: lang}]">Chọn danh sách user</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class="col-md-3">
+            <select name="" class="form-control">
+                <option value="">Xóa các khuyến mãi được chọn</option>
+            </select>
+        </div>
+        <div class="col-md-3 dels-list">
+            {{length_selected}} của {{length_all}} được chọn
+            <button (click)="deletePromotionListEvent()" type="button" class="btn btn-danger">Thực hiện</button>
+        </div>
+    </div>
+</div>

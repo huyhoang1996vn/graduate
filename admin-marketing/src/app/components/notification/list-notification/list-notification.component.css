@@ -1,0 +1,27 @@
+.mt-50{
+    margin-top: 50px;
+}
+.mb-30{
+    margin-bottom: 30px;
+}
+.mb-15{
+    margin-bottom: 15px;
+}
+.mt-15{
+    margin-top: 15px;
+}
+.messsage{
+    color: green;
+}
+.row-border tr td:first-child input{
+    margin-left: 0px;
+}
+.dels-noti{
+    margin-bottom: 50px;
+}
+.messsage_error{
+    color: red;
+}
+.custom-title a {
+	padding: 5px 0;
+}

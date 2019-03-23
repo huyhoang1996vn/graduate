@@ -1,0 +1,67 @@
+<!-- Start breadcrumb -->
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="">Trang Chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Hot Ads</li>
+        </ol>
+    </nav>
+</div>
+<!-- End breadcrumb -->
+<div class="row text-center">
+    <p class="title">Hot Ads</p>
+</div>
+<div *ngIf="hot_advs">
+    <div class='row title-hot-advs'>
+        <a class="pull-right" [routerLink]="['/hot-advs-add/', {lang: 'vi'}]">
+    		<div class="btn btn-primary">
+    			<span class="glyphicon glyphicon-plus"></span>
+    			Thêm Hot Ads
+    		</div>
+    	</a>
+    </div>
+    <br>
+    <div class="table card-list" >
+        <div class="row mb-30 language">
+            <div class="col-xs-12 col-sm-12">
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn {{ lang === 'vi' ? 'btn-primary' : 'btn-info' }}"
+                    (click)="changeLang('vi')"
+                    >VI</button>
+                    <button type="button" class="btn {{ lang === 'vi' ? 'btn-info' : 'btn-primary' }}"
+                        (click)="changeLang('en')"
+                    >EN</button>
+                </div> 
+            </div>
+        </div>
+        <div class="custom-table">
+        	<table datatable class="row-border hover" id="table_id" dt-instance="dtInstanceCallback" [dtOptions]='dtOptions'>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" name="select_all" id="select-all" (change)="selectAllEvent($event);"/></th>
+                        <th><span>ID</span></th>
+                        <th><span>Hot Ads</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-data" *ngFor="let hot_adv of hot_advs">
+                        <td><input type="checkbox" (change)="selectCheckbox($event);"/></td>
+                        <td>{{ hot_adv.id }}</td>
+                        <td><a routerLink="/hot-advs-detail/{{ hot_adv.id }}">{{ hot_adv.name }}</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    	<div class='row'>
+    		<div class="col-md-3">
+    			<select name="" class="form-control">
+    				<option value="">Xóa các Hot Ads được chọn</option>
+    			</select>
+    		</div>
+    		<div class="col-md-3">
+    			{{length_selected}} của {{length_all}} được chọn
+    			<button (click)="confirmDelete()" type="button" class=" button-hot-ads btn btn-danger">Thực hiện</button>
+    		</div>
+    	</div>
+    </div>
+</div>

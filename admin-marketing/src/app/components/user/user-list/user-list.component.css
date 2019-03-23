@@ -1,0 +1,23 @@
+/*begin content user list*/
+#table-user_wrapper {
+	overflow: scroll;
+}
+.title-user {
+	margin: 15px 0px;
+	border-bottom: 2px solid black;
+	padding: 0 0 10px 0px;
+	text-transform: uppercase;
+}
+a.pull-left {
+	color: #333333;
+}
+a.pull-left:hover {
+	text-decoration: none;
+}
+p.title {
+	font-size: 34px;
+}
+.button-user {
+	margin-left: 30px;
+}
+/*end content user list*/

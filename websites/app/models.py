@@ -193,7 +193,7 @@ class Products(DateTimeModel):
     price = models.IntegerField(_('price'))
     tax = models.IntegerField(_('tax'), null=True, blank=True)
     hit_count = models.IntegerField(_('hit_count'), null=True, blank=True)
-    expire_date = models.DateField()
+    expire_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(_('active'), default=True)
     count_in_stock = models.IntegerField(_('count in stock'))
 

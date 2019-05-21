@@ -70,7 +70,7 @@ class PictureSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     picture = PictureSerializer(many=True, read_only=True)
     expire_date = serializers.DateField(
-        format="%d/%m/%Y", input_formats=["%d/%m/%Y"])
+        format="%d/%m/%Y", input_formats=["%d/%m/%Y"], required=False)
     stores = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:

@@ -301,6 +301,12 @@ class OrderInfomations(DateTimeModel):
     def __str__(self):
         return "%s" % (self.id)
 
+    @property
+    def detail_order(instance):
+        # Get price from TimePackagePrice
+        products = instance.products.all()
+        return OrderDetails.objects.filter(product__in=products, orderInfomation=instance)\
+            .values('product_id', 'quantity', 'product__name')
 
 @python_2_unicode_compatible
 class Feedbacks(DateTimeModel):

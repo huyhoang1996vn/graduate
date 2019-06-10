@@ -188,7 +188,11 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
     store = serializers.CharField(required=False)
     money = serializers.CharField(read_only = True)
     products = serializers.CharField(read_only = True)
-
+    name_product = serializers.SerializerMethodField()
+    name_customer = serializers.SerializerMethodField()
+    address_detail = serializers.SerializerMethodField()
+    phone_detail = serializers.SerializerMethodField()
+    detail_order = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderInfomations
@@ -200,6 +204,23 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
             data.pop('store', None)
         return super(OrderOfStoreSerializer, self).to_internal_value(data)
 
+    def get_name_product(self, obj):
+        return None
+
+    def get_name_customer(self, obj):
+        return obj.customer.user.email
+
+    def get_address_detail(self, obj):
+        return obj.shipinfomations.address
+
+    def get_phone_detail(self, obj):
+        return obj.shipinfomations.phone
+
+    def get_detail_order(self, obj):
+        result = ''
+        for item in obj.detail_order:
+            result += ('id: %s, Product: %s, Count: %s \n')%(item.get('product_id'), item.get('product__name'), item.get('quantity'))
+        return result
 
 class OrderSerializer(serializers.ModelSerializer):
 

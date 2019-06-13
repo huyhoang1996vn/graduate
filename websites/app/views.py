@@ -140,6 +140,7 @@ def view_cart(request):
 @check_user_permission(['add_carts', 'change_carts', 'delete_carts'])
 def modify_cart(request):
     try:
+        print 'request.data ', request.data
         addCartSerializer = AddCartSerializer(data=request.data)
         if addCartSerializer.is_valid():
             product_id = addCartSerializer.data['product_id']
@@ -222,7 +223,7 @@ def create_order(request):
                     product = Products.objects.get(id=item['product_id'])
                 except Products.DoesNotExist, e:
                     return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
-                if product.count_in_stock < item['quantity']:
+                if product.count_in_stock < int(item['quantity']):
                     list_product_not_enough.append(product.id)
 
         if list_product_not_enough:
@@ -253,15 +254,15 @@ def create_order(request):
                     return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
                 
                 # Check count product
-                if product.count_in_stock < item['quantity']:
+                if product.count_in_stock < int(item['quantity']):
                     return Response({"code": 400, "message": "Count product is not enough.", "fields": ""}, status=400)
 
-                new_order.money += product.price * item['quantity']
+                new_order.money += product.price * int(item['quantity'])
                 # Save new order to order detail use, if exist new order then don't save
                 if not new_order.pk:
                     new_order.save()
                 order_detail = OrderDetails(
-                    product=product, orderInfomation=new_order, quantity=item['quantity']).save()
+                    product=product, orderInfomation=new_order, quantity=int(item['quantity'])).save()
                 # remove cart when order
                 if request.user.is_authenticated():
                     CartDetail.objects.filter(product=product, cart=customer.cart ).delete()
@@ -300,7 +301,7 @@ def redirect_paypal(request):
                     product = Products.objects.get(id=item['product_id'])
                 except Products.DoesNotExist, e:
                     return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
-                if product.count_in_stock < item['quantity']:
+                if product.count_in_stock < int(item['quantity']):
                     list_product_not_enough.append(product.id)
                     
         if list_product_not_enough:
@@ -335,15 +336,15 @@ def redirect_paypal(request):
                     return Response({"code": 400, "message": "Products not found.", "fields": ""}, status=400)
                 
                 # Check count product
-                if product.count_in_stock < item['quantity']:
+                if product.count_in_stock < int(item['quantity']):
                     return Response({"code": 400, "message": "Count product is not enough.", "fields": ""}, status=400)
 
-                new_order.money += (product.price) * item['quantity']
+                new_order.money += (product.price) * int(item['quantity'])
                 # Save new order to order detail use, if exist new order then don't save
                 if not new_order.pk:
                     new_order.save()
                 order_detail = OrderDetails(
-                    product=product, orderInfomation=new_order, quantity=item['quantity']).save()
+                    product=product, orderInfomation=new_order, quantity=int(item['quantity'])).save()
                 # remove cart when order
                 if request.user.is_authenticated():
                     CartDetail.objects.filter(product=product, cart=customer.cart ).delete()

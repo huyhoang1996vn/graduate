@@ -188,7 +188,6 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
     store = serializers.CharField(required=False)
     money = serializers.CharField(read_only = True)
     products = serializers.CharField(read_only = True)
-    name_product = serializers.SerializerMethodField()
     name_customer = serializers.SerializerMethodField()
     address_detail = serializers.SerializerMethodField()
     phone_detail = serializers.SerializerMethodField()
@@ -198,17 +197,23 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
         model = OrderInfomations
         fields = '__all__'
 
+    def validate_status_payment(self, value):
+        if self.instance:
+            if self.instance.status_payment == 'completed' and value != self.instance.status_payment:
+                raise serializers.ValidationError("This order is paymented.")
+        return value
+
     # Remove store when update order
     def to_internal_value(self, data):
         if self.instance:
             data.pop('store', None)
         return super(OrderOfStoreSerializer, self).to_internal_value(data)
 
-    def get_name_product(self, obj):
-        return None
-
     def get_name_customer(self, obj):
-        return obj.customer.user.email
+        print 'obj.customer ', obj.customer
+        if obj.customer:
+            return obj.customer.user.email
+        return None
 
     def get_address_detail(self, obj):
         return obj.shipinfomations.address
@@ -219,7 +224,7 @@ class OrderOfStoreSerializer(serializers.ModelSerializer):
     def get_detail_order(self, obj):
         result = ''
         for item in obj.detail_order:
-            result += ('id: %s, Product: %s, Count: %s \n')%(item.get('product_id'), item.get('product__name'), item.get('quantity'))
+            result += ('Product: %s, Count: %s \n')%(item.get('product__name'), item.get('quantity'))
         return result
 
 class OrderSerializer(serializers.ModelSerializer):
